@@ -14,24 +14,30 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Enemy extends JLabel implements Moveable {
+	
+//	위치 상태
 	private int x;
 	private int y;
 
+//	움직임 상태
 	private boolean left;
 	private boolean right;
 	private boolean up;
 	private boolean down;
 
-	private int state; //0(살아있는상태),1(물방울에같힌상태)
+//	0(살아있는상태),1(물방울에같힌상태)
+	private int state; 
 
 	private EnemyDirection enemyDirection;
 
 	private boolean leftCrash;
 	private boolean rightCrash;
 
+//	enemy의 속도 상태
 	private static final int SPEED = 3;
 	private static final int JUMPSPEED = 1;
 
+//	enemy의 좌우 모양
 	private ImageIcon enemyR;
 	private ImageIcon enemyL;
 
@@ -47,11 +53,13 @@ public class Enemy extends JLabel implements Moveable {
 		left();
 	}
 
+//	enemy 생성
 	private void initObject() {
 		enemyR = new ImageIcon("image/enemyR.png");
 		enemyL = new ImageIcon("image/enemyL.png");
 	}
 
+//	enemy 시작 위치(천정에서 시작)
 	private void initSetting() {
 		x = 480;
 		y = 178;

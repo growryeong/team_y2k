@@ -19,18 +19,24 @@ public class Player extends JLabel implements Moveable {
 	
 	private BubbleGame mContext;
 
+//	움직임 상태
 	private boolean left;
 	private boolean right;
 	private boolean up;
 	private boolean down;
 	private PlayerDirection playerDirection;
 
+//	벽에 충돌한 상태
 	private boolean leftCrash;
 	private boolean rightCrash;
+//	위쪽벽 충돌
+//	private boolean upCrash;
 
+//	플레이어 속도 상태
 	private static final int SPEED = 4;
 	private static final int JUMPSPEED = 2; 
 
+//	캐릭터 좌우 모양
 	private ImageIcon playerR;
 	private ImageIcon playerL;
 
@@ -59,6 +65,7 @@ public class Player extends JLabel implements Moveable {
 
 		leftCrash = false;
 		rightCrash = false;
+//		upCrash = false;
 
 		setIcon(playerR);
 		setSize(50, 50);
@@ -192,6 +199,10 @@ public class Player extends JLabel implements Moveable {
 	public boolean isRightCrash() {
 		return rightCrash;
 	}
+	
+//	public boolean isUpCrash() {
+//		return upCrash;
+//	}
 
 	public static int getSpeed() {
 		return SPEED;
@@ -248,6 +259,10 @@ public class Player extends JLabel implements Moveable {
 	public void setRightCrash(boolean rightCrash) {
 		this.rightCrash = rightCrash;
 	}
+	
+//	public void setUpCrash(boolean upCrash) {
+//		this.upCrash = upCrash;
+//	}
 
 	public void setPlayerR(ImageIcon playerR) {
 		this.playerR = playerR;
