@@ -1,8 +1,11 @@
 package bublebubleGame.level;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 
 import bublebubleGame.component.Bubble;
 import bublebubleGame.component.Enemy;
@@ -17,21 +20,31 @@ public class LevelManager {
 	private int enemiesDefeated; // 적을 처치한 횟수
 	
 	private BubbleGame mContext;
+    private List<Enemy> enemyList;
+    private List<Bubble> bubbleList;
 	
-
 	public LevelManager(BubbleGame mContext) {
 		this.mContext = mContext;
 		this.currentLevel = 1; // 시작 레벨 초기화 1
 		this.currentScore = 0; // 시작 점수 초기화 0
 		this.enemiesDefeated = 0; // 처치한 적 초기화
+		this.bubbleList = new ArrayList<>(); // 목록 초기화
 	}
 
 	public void increaseLevel(Player player) {
-		currentLevel++;
-		int enemyCount = player.getSpeed() * 2; // 게임에 따라
+		currentLevel++; // 현재 레벨 상승
+		int enemyCount = player.getSpeed() * 2; // 플레이어 속도에 따라 적군 수 생성
 		 for (int i = 0; i < enemyCount; i++) {
-	            mContext.getBubbleList().addAll((Collection<? extends Bubble>) new Enemy());
-	        }
+//	            mContext.getBubbleList().addAll((Collection<? extends Bubble>) new Enemy());
+			 Enemy enemyBubble = new Enemy();
+			 
+			 enemyBubble.setState(1); // 초기 상태를 1로 설정하여 살아있는 적 표시
+			 
+			 // 래밸을 올릴때 enemy object 생성하고 mContext.getBubbleList()에 추가
+			 //getBubbleList() -> List<Bubble> = Enemy가 Bubble의 서브 클래스거나 공통 인터페이스 공유해야함
+//			 mContext.getBubbleList().add(enemyBubble); 
+			 enemyList.add(enemyBubble);
+			 }
 	}
 
 	// 점수 업데이트 메서드 (점수 채점 조건 충족되면 이 메서드 호출)

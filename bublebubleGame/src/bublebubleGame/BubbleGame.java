@@ -126,40 +126,45 @@ public class BubbleGame extends JFrame {
 		});
 	}
 
+	/*
+	 * 점수는 1점 오르고 while문이 종료되었지만 백그라운드 화면이 하얀색으로 날라감
+	 */
 	private void initThread() {
+		
+		 boolean[] isRunning = {true}; // 배열을 사용하여 
+		
 		new Thread(() -> {
 			enemy.start();
 //			gameLoop();
 			
-			boolean isRunning = true;
+//			boolean isRunning = true;
 			
-			while (isRunning) {
+			while (isRunning[0]) {
 	            // 플레이어가 적을 처치했는지 확인하고 점수 업데이트
 	            boolean enemiesKilled = playerKilledEnemies();
 	            if (enemiesKilled) {
 	                SwingUtilities.invokeLater(() -> {
 	                    levelManager.updateScore(1);
 	                    System.out.println("Player killed an enemy! Current Score: " + levelManager.getCurrentScore());
+
+	                    // 레벨 업 조건 충족 여부 확인
+	                    boolean levelUp = shouldLevelUP();
+	                    if (levelUp) {
+	                        levelManager.increaseLevel(player);
+	                        System.out.println("Level up! Current Level: " + levelManager.getCurrentLevel());
+	                    }
+
+	                    isRunning[0] = false; // 루프 종료
 	                });
 	            }
-	             
-
-	            // 레벨 업 조건 충족 여부 확인
-	            boolean levelUp = shouldLevelUP();
-	            if (levelUp) {
-	            	SwingUtilities.invokeLater(() -> {
-	                    levelManager.increaseLevel(player);
-	                    System.out.println("Level up! Current Level: " + levelManager.getCurrentLevel());
-	                });
-	            }
-
-	            // 과도한 루프 실행 방지를 위한 100초 지연 추가
+	            	
+	            // 과도한 루프 실행 방지를 위한 시간 지연
 	            try {
-	                Thread.sleep(100); // 필요에 따라 시간 수정
+	                Thread.sleep(1000); // 필요에 따라 시간 수정
 	            } catch (InterruptedException e) {
 	                e.printStackTrace();
 	            }
-		}
+			}
 		}).start();
 	}
 
@@ -195,7 +200,9 @@ public class BubbleGame extends JFrame {
 			if (bubble.getState() == 1) { // 버블 안에 있는 상태 1
 				// 플레이어가 적 공격하는데 성공
 				levelManager.increaseEnemiesDefeated(); // 처치한 적 수 증가
+				bubble.setState(0); // 상태를 0으로 재설정
 				enemiesKilled = true; // 적을 한 명 이상 처치하면 true
+				System.out.println("Enemy killed! State: " + bubble.getState()); // 메서드가 호출되고 있는지 상태가 업데이트 되는지 확인
 			}
 		}
 		return enemiesKilled;
