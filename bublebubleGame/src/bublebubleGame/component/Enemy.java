@@ -42,8 +42,8 @@ public class Enemy extends JLabel implements Moveable {
 
 	public void start() {
 		initBackgroundEnemyService();
-		state = 0;
-		enemyDirection = EnemyDirection.RIGHT;
+		setState(0);
+		setEnemyDirection(EnemyDirection.RIGHT);
 		left();
 	}
 
@@ -58,11 +58,11 @@ public class Enemy extends JLabel implements Moveable {
 
 		left = false;
 		right = false;
-		up = false;
+		setUp(false);
 		down = false;
 
-		leftCrash = false;
-		rightCrash = false;
+		setLeftCrash(false);
+		setRightCrash(false);
 
 		setIcon(enemyR);
 		setSize(50, 50);
@@ -76,7 +76,7 @@ public class Enemy extends JLabel implements Moveable {
 	@Override
 	public void up() {
 		System.out.println("UP");
-		up = true;
+		setUp(true);
 		Thread t = new Thread(() -> {
 
 			for (int i = 0; i < 130 / JUMPSPEED; i++) {
@@ -89,7 +89,7 @@ public class Enemy extends JLabel implements Moveable {
 				}
 			}
 
-			up = false;
+			setUp(false);
 			down();
 		});
 
@@ -121,7 +121,7 @@ public class Enemy extends JLabel implements Moveable {
 	@Override
 	public void left() {
 		System.out.println("LEFT");
-		enemyDirection = EnemyDirection.LEFT;
+		setEnemyDirection(EnemyDirection.LEFT);
 		setIcon(enemyL);
 		left = true;
 
@@ -146,7 +146,7 @@ public class Enemy extends JLabel implements Moveable {
 	@Override
 	public void right() {
 		System.out.println("RIGHT");
-		enemyDirection = EnemyDirection.RIGHT;
+		setEnemyDirection(EnemyDirection.RIGHT);
 		setIcon(enemyR);
 
 		right = true;
@@ -167,6 +167,110 @@ public class Enemy extends JLabel implements Moveable {
 
 		t.start();
 
+	}
+
+	public boolean isUp() {
+		return up;
+	}
+
+	public void setUp(boolean up) {
+		this.up = up;
+	}
+
+	public int getState() {
+		return state;
+	}
+
+	public void setState(int state) {
+		this.state = state;
+	}
+
+	public EnemyDirection getEnemyDirection() {
+		return enemyDirection;
+	}
+
+	public void setEnemyDirection(EnemyDirection enemyDirection) {
+		this.enemyDirection = enemyDirection;
+	}
+
+	public boolean isLeftCrash() {
+		return leftCrash;
+	}
+
+	public void setLeftCrash(boolean leftCrash) {
+		this.leftCrash = leftCrash;
+	}
+
+	public boolean isRightCrash() {
+		return rightCrash;
+	}
+
+	public void setRightCrash(boolean rightCrash) {
+		this.rightCrash = rightCrash;
+	}
+
+	public int getX() {
+		return x;
+	}
+
+	public int getY() {
+		return y;
+	}
+
+	public boolean isLeft() {
+		return left;
+	}
+
+	public boolean isRight() {
+		return right;
+	}
+
+	public boolean isDown() {
+		return down;
+	}
+
+	public static int getSpeed() {
+		return SPEED;
+	}
+
+	public static int getJumpspeed() {
+		return JUMPSPEED;
+	}
+
+	public ImageIcon getEnemyR() {
+		return enemyR;
+	}
+
+	public ImageIcon getEnemyL() {
+		return enemyL;
+	}
+
+	public void setX(int x) {
+		this.x = x;
+	}
+
+	public void setY(int y) {
+		this.y = y;
+	}
+
+	public void setLeft(boolean left) {
+		this.left = left;
+	}
+
+	public void setRight(boolean right) {
+		this.right = right;
+	}
+
+	public void setDown(boolean down) {
+		this.down = down;
+	}
+
+	public void setEnemyR(ImageIcon enemyR) {
+		this.enemyR = enemyR;
+	}
+
+	public void setEnemyL(ImageIcon enemyL) {
+		this.enemyL = enemyL;
 	}
 
 }

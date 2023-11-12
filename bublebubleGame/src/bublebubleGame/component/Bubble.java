@@ -59,8 +59,8 @@ public class Bubble extends JLabel {
 
 	private void initSetting() {
 		up = false;
-		left = false;
-		right = false;
+		setLeft(false);
+		setRight(false);
 
 		this.x = player.getX();
 		this.y = player.getY();
@@ -196,5 +196,37 @@ public class Bubble extends JLabel {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public boolean isLeft() {
+		return left;
+	}
+
+	public void setLeft(boolean left) {
+		this.left = left;
+	}
+
+	public boolean isRight() {
+		return right;
+	}
+
+	public void setRight(boolean right) {
+		this.right = right;
+	}
+
+	public int getState() {
+		return state;
+	}
+
+	public void setState(int state) {
+		this.state = state;
+	}
+
+	public boolean isUp() {
+		return up;
+	}
+
+	public void setUp(boolean up) {
+		this.up = up;
 	}
 }

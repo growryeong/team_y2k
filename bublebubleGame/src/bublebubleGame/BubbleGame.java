@@ -9,6 +9,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
+import bubblebubbleGame.level.LevelManager;
 import bublebubleGame.component.Bubble;
 import bublebubleGame.component.Enemy;
 import bublebubleGame.component.Player;
@@ -29,9 +30,10 @@ public class BubbleGame extends JFrame {
 
 	private Player player;
 	private Enemy enemy;
-	
+
 	private List<Bubble> bubbleList;
 
+	private LevelManager levelManager; // 레벨
 
 	public BubbleGame() {
 		initObject();
@@ -43,9 +45,13 @@ public class BubbleGame extends JFrame {
 
 	private void initObject() {
 		bubbleList = new ArrayList<>();
-		enemy = new Enemy();	
+		enemy = new Enemy();
 		player = new Player(mContext);
+
 		frontMap = new JLabel(new ImageIcon("image/backgroundMap3.png"));
+
+		frontMap = new JLabel(new ImageIcon("image/backgroundMap.png"));
+		levelManager = new LevelManager(); // 레벨 객체
 		new BGM();
 	}
 
@@ -98,14 +104,63 @@ public class BubbleGame extends JFrame {
 			}
 		});
 	}
-	
+
 	private void initThread() {
 		new Thread(()->{
 			enemy.start();
+			levelManager.start();
 		}).start();
 	}
+	
+	// 레벨에 따라 다른 배경 맵
+//	private void updateBackgroundMap() {
+//		int currentLevel = levelManager.getCurrentLevel(); //현재 레벨
+//		String bgackgroundMapPath = "레벨에 따른 이미지" + currentLevel + ".png";
+//		frontMap.setIcon(new ImageIcon(backgroundPath)); // 레벨 이미지 
+//	}
+	
 
 	public static void main(String[] args) {
 		new BubbleGame();
+	}
+
+	public BubbleGame getmContext() {
+		return mContext;
+	}
+
+	public JLabel getFrontMap() {
+		return frontMap;
+	}
+
+	public Player getPlayer() {
+		return player;
+	}
+
+	public Enemy getEnemy() {
+		return enemy;
+	}
+
+	public List<Bubble> getBubbleList() {
+		return bubbleList;
+	}
+
+	public void setmContext(BubbleGame mContext) {
+		this.mContext = mContext;
+	}
+
+	public void setFrontMap(JLabel frontMap) {
+		this.frontMap = frontMap;
+	}
+
+	public void setPlayer(Player player) {
+		this.player = player;
+	}
+
+	public void setEnemy(Enemy enemy) {
+		this.enemy = enemy;
+	}
+
+	public void setBubbleList(List<Bubble> bubbleList) {
+		this.bubbleList = bubbleList;
 	}
 }
