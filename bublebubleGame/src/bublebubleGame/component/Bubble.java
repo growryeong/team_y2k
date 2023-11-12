@@ -196,6 +196,16 @@ public class Bubble extends JLabel {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+		
+		// 적 처치 시 점수 업데이트
+		if(getEnemy() != null && getEnemy().getState() == 0) {
+			mContext.getLevelManager().updateScore(1); // 적을 처치하면 1점을 얻는다고 가정
+		}
+	}
+
+	private Enemy getEnemy() {
+		// 적 처치 시 점수 업데이트때 사용하기 위해 
+		return enemy;
 	}
 
 	public boolean isLeft() {

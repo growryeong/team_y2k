@@ -9,7 +9,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
-import bubblebubbleGame.level.LevelManager;
+import bublebubleGame.level.LevelManager;
 import bublebubleGame.component.Bubble;
 import bublebubleGame.component.Enemy;
 import bublebubleGame.component.Player;
@@ -34,6 +34,9 @@ public class BubbleGame extends JFrame {
 	private List<Bubble> bubbleList;
 
 	private LevelManager levelManager; // 레벨
+	// 나중에 업데이트 가능하도록 레이블을 인스턴스 변수로 설정
+	private JLabel scoreLabel; // 점수 
+	private JLabel levelJLabel; // 레벨
 
 	public BubbleGame() {
 		initObject();
@@ -63,6 +66,21 @@ public class BubbleGame extends JFrame {
 		setContentPane(frontMap);
 		add(player);
 		add(enemy);
+		
+		// 현재 점수 및 레벨을 표시하는 레이블 추가
+		JLabel scoreLabel = new JLabel("score : 0");
+		JLabel levelLabel = new JLabel("level : 1");
+		
+		// 레이블 위치 설정
+		scoreLabel.setBounds(10, 10, 100, 20);
+		levelLabel.setBounds(10, 30, 100, 20);
+		
+		// 레이블 프레임에 추가
+		add(scoreLabel);
+		add(levelLabel);
+		
+		this.scoreLabel = scoreLabel;
+		this.levelJLabel = levelLabel;
 	}
 
 	private void initListener() {
@@ -109,15 +127,11 @@ public class BubbleGame extends JFrame {
 		new Thread(()->{
 			enemy.start();
 			levelManager.getCurrentLevel(); // 적절한 메서드 호출하여 레벨 시작
+//			levelManager.start();
 		}).start();
 	}
 	
-	// 레벨에 따라 다른 배경 맵
-//	private void updateBackgroundMap() {
-//		int currentLevel = levelManager.getCurrentLevel(); //현재 레벨
-//		String bgackgroundMapPath = "레벨에 따른 이미지" + currentLevel + ".png";
-//		frontMap.setIcon(new ImageIcon(backgroundPath)); // 레벨 이미지 
-//	}
+
 	
 
 	public static void main(String[] args) {
@@ -163,4 +177,11 @@ public class BubbleGame extends JFrame {
 	public void setBubbleList(List<Bubble> bubbleList) {
 		this.bubbleList = bubbleList;
 	}
+
+	public LevelManager getLevelManager() {
+		// Bubble 클래스에서 getLevelManager 사용하기 위해서
+		return levelManager;
+	}
+
+	
 }
