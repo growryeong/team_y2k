@@ -9,6 +9,7 @@ import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.SwingUtilities;
 
 import bublebubleGame.level.LevelManager;
 import bublebubleGame.component.Bubble;
@@ -36,7 +37,7 @@ public class BubbleGame extends JFrame {
 
 	private LevelManager levelManager; // 레벨
 	// 나중에 업데이트 가능하도록 레이블을 인스턴스 변수로 설정
-	private JLabel scoreLabel; // 점수 
+	private JLabel scoreLabel; // 점수
 	private JLabel levelJLabel; // 레벨
 
 	public BubbleGame() {
@@ -53,10 +54,10 @@ public class BubbleGame extends JFrame {
 		enemy = new Enemy();
 		player = new Player(mContext);
 
-		frontMap = new JLabel(new ImageIcon("image/backgroundMap3.png"));
+//		frontMap = new JLabel(new ImageIcon("image/backgroundMap3.png"));
 
 		frontMap = new JLabel(new ImageIcon("image/backgroundMap.png"));
-		
+
 		new BGM();
 	}
 
@@ -68,21 +69,21 @@ public class BubbleGame extends JFrame {
 		setContentPane(frontMap);
 		add(player);
 		add(enemy);
-		
+
 		// 현재 점수 및 레벨을 표시하는 레이블 추가
 		JLabel scoreLabel = new JLabel("score : 0");
 		JLabel levelLabel = new JLabel("level : 1");
-		
+
 		// 레이블 위치 설정
 		scoreLabel.setBounds(10, 10, 100, 20);
 		levelLabel.setBounds(10, 30, 100, 20);
-		
+
 		// 레이블 프레임에 추가
 		add(scoreLabel);
 		add(levelLabel);
-		
+
 		this.scoreLabel = scoreLabel;
-		this.levelJLabel = levelLabel;
+		this.setLevelJLabel(levelLabel);
 	}
 
 	private void initListener() {
@@ -103,7 +104,7 @@ public class BubbleGame extends JFrame {
 					if (!player.isUp() && !player.isDown())
 						player.up();
 					break;
-				case KeyEvent.VK_SPACE: 
+				case KeyEvent.VK_SPACE:
 					Bubble bubble = new Bubble(mContext, enemy, player);
 					bubbleList.add(bubble);
 					add(bubble);
@@ -126,20 +127,93 @@ public class BubbleGame extends JFrame {
 	}
 
 	private void initThread() {
-		new Thread(()->{
+		new Thread(() -> {
 			enemy.start();
-			levelManager.getCurrentLevel(); // 적절한 메서드 호출하여 레벨 시작
-//			levelManager.start();
+//			gameLoop();
+			
+			boolean isRunning = true;
+			
+			while (isRunning) {
+	            // 플레이어가 적을 처치했는지 확인하고 점수 업데이트
+	            boolean enemiesKilled = playerKilledEnemies();
+	            if (enemiesKilled) {
+	                SwingUtilities.invokeLater(() -> {
+	                    levelManager.updateScore(1);
+	                    System.out.println("Player killed an enemy! Current Score: " + levelManager.getCurrentScore());
+	                });
+	            }
+	             
+
+	            // 레벨 업 조건 충족 여부 확인
+	            boolean levelUp = shouldLevelUP();
+	            if (levelUp) {
+	            	SwingUtilities.invokeLater(() -> {
+	                    levelManager.increaseLevel(player);
+	                    System.out.println("Level up! Current Level: " + levelManager.getCurrentLevel());
+	                });
+	            }
+
+	            // 과도한 루프 실행 방지를 위한 100초 지연 추가
+	            try {
+	                Thread.sleep(100); // 필요에 따라 시간 수정
+	            } catch (InterruptedException e) {
+	                e.printStackTrace();
+	            }
+		}
 		}).start();
 	}
-	
 
-	
+	// 레벨 업 조건 충족 여부 확인하는 코드
+	public boolean shouldLevelUP() {
+
+		// levelManager가 null인지 확인
+		if (levelManager != null) {
+			// 레벨 조건
+			int scoreThreshold = 1000;
+			int enemiesThreshold = 10;
+
+			// 현재 점수와 죽인 적 확인
+			int currentScore = levelManager.getCurrentScore();
+			int enemiesDefeated = levelManager.getEnemiesDefeated();
+
+			// 플레이어 레벨 업 조건 확인
+			if (currentScore >= scoreThreshold && enemiesDefeated >= enemiesThreshold) {
+                levelManager.increaseLevel(player); // 레벨 상승
+                levelManager.updateScore(-scoreThreshold); // 점수 차감
+                return true;
+            }
+		}
+		return false;
+	}
+
+	// 플레이어가 적을 죽였는지 확인하는 코드 구현
+	private boolean playerKilledEnemies() {
+		boolean enemiesKilled = false; // 기본값
+		
+		// bubbleList를 반복하고 각 버블의 상태 확인 , 버블의 상태 == 1이면 levelManager.increaseEnemiesDefeated() 호츌
+		for (Bubble bubble : bubbleList) {
+			if (bubble.getState() == 1) { // 버블 안에 있는 상태 1
+				// 플레이어가 적 공격하는데 성공
+				levelManager.increaseEnemiesDefeated(); // 처치한 적 수 증가
+				enemiesKilled = true; // 적을 한 명 이상 처치하면 true
+			}
+		}
+		return enemiesKilled;
+	}
 
 	public static void main(String[] args) {
 		new BubbleGame();
+	
 	}
 
+	// 게임 진행 로직의 일부로 게임 루프 중 또는 게임에서 특정 이벤트가 발생할 때 호출
+	// 게임 루프의 각 반복마다 shouldLevelUP을 검사하여 플레이어가 다음 레벨로 진행해야 하는지 여부 결정
+	// 적을 죽였을때도 똑같이 playerKilledEnemies가 호출
+	private void gameLoop() {
+		shouldLevelUP(); // 레벨 업 조건 확인
+		playerKilledEnemies(); // 죽인 적 
+	}
+	
 	public BubbleGame getmContext() {
 		return mContext;
 	}
@@ -190,7 +264,12 @@ public class BubbleGame extends JFrame {
 		return scoreLabel;
 	}
 
+	public JLabel getLevelJLabel() {
+		return levelJLabel;
+	}
 
+	public void setLevelJLabel(JLabel levelJLabel) {
+		this.levelJLabel = levelJLabel;
+	}
 
-	
 }

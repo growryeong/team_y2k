@@ -14,12 +14,16 @@ public class LevelManager {
 
 	private int currentLevel; // 현재 레벨
 	private int currentScore; // 현재 점수
+	private int enemiesDefeated; // 적을 처치한 횟수
+	
 	private BubbleGame mContext;
+	
 
 	public LevelManager(BubbleGame mContext) {
 		this.mContext = mContext;
-		this.currentLevel = 1; // 시작 레벨 1
-		this.currentScore = 0; // 시작 점수 0
+		this.currentLevel = 1; // 시작 레벨 초기화 1
+		this.currentScore = 0; // 시작 점수 초기화 0
+		this.enemiesDefeated = 0; // 처치한 적 초기화
 	}
 
 	public void increaseLevel(Player player) {
@@ -60,6 +64,16 @@ public class LevelManager {
 	// 현재 레벨 반환하는 메소드
 	public int getCurrentLevel() {
 		return currentLevel;
+	}
+	// Getter
+	public int getEnemiesDefeated() {
+		return enemiesDefeated;
+	}
+	
+	// 처치한 적의 수 늘리는 메소드
+	public void increaseEnemiesDefeated() {
+		enemiesDefeated++;
+		System.out.println("Enemies defeated: " + enemiesDefeated);
 	}
 
 }
