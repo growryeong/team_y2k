@@ -29,7 +29,7 @@ public class BackgroundPlayerService implements Runnable {
 		this.bubbleList = mContext.getBubbleList();
 		this.setmContext(mContext);
 		try {
-			image = ImageIO.read(new File("image/backgroundMapService.png"));
+			image = ImageIO.read(new File("image/backgroundMapService3.png"));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -47,6 +47,9 @@ public class BubbleGame extends JFrame {
 		bubbleList = new ArrayList<>();
 		enemy = new Enemy();
 		player = new Player(mContext);
+
+		frontMap = new JLabel(new ImageIcon("image/backgroundMap3.png"));
+
 		frontMap = new JLabel(new ImageIcon("image/backgroundMap.png"));
 		levelManager = new LevelManager(); // 레벨 객체
 		new BGM();
