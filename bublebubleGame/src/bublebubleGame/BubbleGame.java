@@ -1,6 +1,7 @@
 package bublebubleGame;
 
 import java.awt.event.KeyAdapter;
+
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +45,7 @@ public class BubbleGame extends JFrame {
 		initListener();
 		initThread();
 		setVisible(true);
+		levelManager = new LevelManager(this); // 레벨 매니저에 BubbleGame 인스턴스 전달
 	}
 
 	private void initObject() {
@@ -54,7 +56,7 @@ public class BubbleGame extends JFrame {
 		frontMap = new JLabel(new ImageIcon("image/backgroundMap3.png"));
 
 		frontMap = new JLabel(new ImageIcon("image/backgroundMap.png"));
-		levelManager = new LevelManager(); // 레벨 객체
+		
 		new BGM();
 	}
 
@@ -182,6 +184,13 @@ public class BubbleGame extends JFrame {
 		// Bubble 클래스에서 getLevelManager 사용하기 위해서
 		return levelManager;
 	}
+
+	public JLabel getScoreLabel() {
+		// Getter 메소드 추가
+		return scoreLabel;
+	}
+
+
 
 	
 }

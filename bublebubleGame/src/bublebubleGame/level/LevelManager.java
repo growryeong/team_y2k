@@ -8,13 +8,16 @@ import bublebubleGame.component.Bubble;
 import bublebubleGame.component.Enemy;
 import bublebubleGame.component.Player;
 import bublebubleGame.direction.EnemyDirection;
+import bublebubleGame.BubbleGame;
 
 public class LevelManager {
 
 	private int currentLevel; // 현재 레벨
 	private int currentScore; // 현재 점수
+	private BubbleGame mContext;
 
-	public LevelManager() {
+	public LevelManager(BubbleGame mContext) {
+		this.mContext = mContext;
 		this.currentLevel = 1; // 시작 레벨 1
 		this.currentScore = 0; // 시작 점수 0
 	}
@@ -22,9 +25,9 @@ public class LevelManager {
 	public void increaseLevel(Player player) {
 		currentLevel++;
 		int enemyCount = player.getSpeed() * 2; // 게임에 따라
-		for (int i = 0; i < enemyCount; i++) {
-			player.getmContext().getBubbleList().addAll((Collection<? extends Bubble>) new Enemy());
-		}
+		 for (int i = 0; i < enemyCount; i++) {
+	            mContext.getBubbleList().addAll((Collection<? extends Bubble>) new Enemy());
+	        }
 	}
 
 	// 점수 업데이트 메서드 (점수 채점 조건 충족되면 이 메서드 호출)
@@ -39,8 +42,7 @@ public class LevelManager {
 	}
 	
 	private void updateScoreLabel() {
-		mContext.getScoreLavel().setText("Score: " + currentScore);
-		
+	    mContext.getScoreLabel().setText("Score: " + currentScore);
 	}
 	
 	// 점수가 증가하면 배경 맵 변경
