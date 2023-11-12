@@ -19,7 +19,7 @@ public class BackgroundEnemyService implements Runnable {
 	public BackgroundEnemyService(Enemy enemy) {
 		this.enemy = enemy;
 		try {
-			image = ImageIO.read(new File("image/backgroundMapService.png"));
+			image = ImageIO.read(new File("image/backgroundMapService2.png"));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
