@@ -153,4 +153,108 @@ public class Player extends JLabel implements Moveable {
 
 	}
 
+	public int getX() {
+		return x;
+	}
+
+	public int getY() {
+		return y;
+	}
+
+	public BubbleGame getmContext() {
+		return mContext;
+	}
+
+	public boolean isLeft() {
+		return left;
+	}
+
+	public boolean isRight() {
+		return right;
+	}
+
+	public boolean isUp() {
+		return up;
+	}
+
+	public boolean isDown() {
+		return down;
+	}
+
+	public PlayerDirection getPlayerDirection() {
+		return playerDirection;
+	}
+
+	public boolean isLeftCrash() {
+		return leftCrash;
+	}
+
+	public boolean isRightCrash() {
+		return rightCrash;
+	}
+
+	public static int getSpeed() {
+		return SPEED;
+	}
+
+	public static int getJumpspeed() {
+		return JUMPSPEED;
+	}
+
+	public ImageIcon getPlayerR() {
+		return playerR;
+	}
+
+	public ImageIcon getPlayerL() {
+		return playerL;
+	}
+
+	public void setX(int x) {
+		this.x = x;
+	}
+
+	public void setY(int y) {
+		this.y = y;
+	}
+
+	public void setmContext(BubbleGame mContext) {
+		this.mContext = mContext;
+	}
+
+	public void setLeft(boolean left) {
+		this.left = left;
+	}
+
+	public void setRight(boolean right) {
+		this.right = right;
+	}
+
+	public void setUp(boolean up) {
+		this.up = up;
+	}
+
+	public void setDown(boolean down) {
+		this.down = down;
+	}
+
+	public void setPlayerDirection(PlayerDirection playerDirection) {
+		this.playerDirection = playerDirection;
+	}
+
+	public void setLeftCrash(boolean leftCrash) {
+		this.leftCrash = leftCrash;
+	}
+
+	public void setRightCrash(boolean rightCrash) {
+		this.rightCrash = rightCrash;
+	}
+
+	public void setPlayerR(ImageIcon playerR) {
+		this.playerR = playerR;
+	}
+
+	public void setPlayerL(ImageIcon playerL) {
+		this.playerL = playerL;
+	}
+
 }

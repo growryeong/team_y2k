@@ -1,6 +1,7 @@
 package bublebubleGame.service;
 
 import java.awt.Color;
+
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.List;
@@ -13,6 +14,8 @@ import bublebubleGame.component.Player;
 import lombok.Getter;
 import lombok.Setter;
 
+
+
 @Getter
 @Setter
 public class BackgroundPlayerService implements Runnable {
@@ -24,7 +27,7 @@ public class BackgroundPlayerService implements Runnable {
 	public BackgroundPlayerService(BubbleGame mContext, Player player) {
 		this.player = player;
 		this.bubbleList = mContext.getBubbleList();
-		this.mContext = mContext;
+		this.setmContext(mContext);
 		try {
 			image = ImageIO.read(new File("image/backgroundMapService.png"));
 		} catch (Exception e) {
@@ -74,11 +77,21 @@ public class BackgroundPlayerService implements Runnable {
 				}
 
 				Thread.sleep(10);
+				
+
 			} catch (Exception e) {
 				System.out.println("Error : " + e.getMessage());
 			}
 		}
 
+	}
+
+	public BubbleGame getmContext() {
+		return mContext;
+	}
+
+	public void setmContext(BubbleGame mContext) {
+		this.mContext = mContext;
 	}
 
 }
