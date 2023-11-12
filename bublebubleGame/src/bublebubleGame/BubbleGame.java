@@ -45,7 +45,7 @@ public class BubbleGame extends JFrame {
 		bubbleList = new ArrayList<>();
 		enemy = new Enemy();	
 		player = new Player(mContext);
-		frontMap = new JLabel(new ImageIcon("image/backgroundMap2.png"));
+		frontMap = new JLabel(new ImageIcon("image/backgroundMap3.png"));
 		new BGM();
 	}
 
