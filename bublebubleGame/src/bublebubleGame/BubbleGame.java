@@ -9,7 +9,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
-import bubblebubbleGame.level.LevelManager;
+import bublebubleGame.level.LevelManager;
 import bublebubleGame.component.Bubble;
 import bublebubleGame.component.Enemy;
 import bublebubleGame.component.Player;
@@ -108,7 +108,7 @@ public class BubbleGame extends JFrame {
 	private void initThread() {
 		new Thread(()->{
 			enemy.start();
-			levelManager.start();
+//			levelManager.start();
 		}).start();
 	}
 	
