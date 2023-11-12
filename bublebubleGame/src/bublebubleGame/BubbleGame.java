@@ -108,7 +108,7 @@ public class BubbleGame extends JFrame {
 	private void initThread() {
 		new Thread(()->{
 			enemy.start();
-			levelManager.start(); // 레벨 시작
+			levelManager.getCurrentLevel(); // 적절한 메서드 호출하여 레벨 시작
 		}).start();
 	}
 	
