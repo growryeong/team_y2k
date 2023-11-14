@@ -258,3 +258,4 @@ public class Player extends JLabel implements Moveable {
 	}
 
 }
+

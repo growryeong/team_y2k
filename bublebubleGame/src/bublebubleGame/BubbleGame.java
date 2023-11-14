@@ -1,5 +1,6 @@
 package bublebubleGame;
 
+import java.awt.event.ComponentListener;
 import java.awt.event.KeyAdapter;
 
 import java.awt.event.KeyEvent;
@@ -25,7 +26,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class BubbleGame extends JFrame {
+public class BubbleGame extends JFrame{
 
 	private BubbleGame mContext = this;
 	private JLabel frontMap;
@@ -127,7 +128,18 @@ public class BubbleGame extends JFrame {
 	}
 
 	/*
-	 * 점수는 1점 오르고 while문이 종료되었지만 백그라운드 화면이 하얀색으로 날라감
+	 * 오류 내용
+	 * 기존 오류는 점수가 1초에 1점씩 올라가 while문을 종료 시키는 부분 추가
+	 * while문이 종료되었지만 백그라운드 화면이 하얀색으로 사라짐
+	 * 그리고 Enemy가 갇힌 버블이 빠른 속도로 위로 올라감
+	 * 
+	 * -------------------------------------------
+	 * 
+	 * LevelManager에 updateScore 메소드에 updateBackgroundMap() 호출 부분과 updateBackgroundMap 메소드 주석처리 하니까
+	 * 배경 안사라짐
+	 *
+	 *---------------------------------------------------
+	 * 모든 적 처치 시 게임 종료 되는 부분 추가 후 게임 종료 시 현재 점수, 레벨 보여주기
 	 */
 	private void initThread() {
 		
@@ -200,7 +212,7 @@ public class BubbleGame extends JFrame {
 			if (bubble.getState() == 1) { // 버블 안에 있는 상태 1
 				// 플레이어가 적 공격하는데 성공
 				levelManager.increaseEnemiesDefeated(); // 처치한 적 수 증가
-				bubble.setState(0); // 상태를 0으로 재설정
+				bubble.setState(1); // 상태를 0으로 재설정
 				enemiesKilled = true; // 적을 한 명 이상 처치하면 true
 				System.out.println("Enemy killed! State: " + bubble.getState()); // 메서드가 호출되고 있는지 상태가 업데이트 되는지 확인
 			}

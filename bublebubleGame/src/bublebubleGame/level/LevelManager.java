@@ -53,9 +53,9 @@ public class LevelManager {
 		updateScoreLabel(); // 점수 라벨 업데이트
 		
 		// 점수 상승 확인 및 배경 맵 업데이트
-		if(points > 0) {
-			updateBackgroundMap();
-		}
+//		if(points > 0) {
+//			updateBackgroundMap();
+//		}
 	}
 	
 	private void updateScoreLabel() {
@@ -63,11 +63,11 @@ public class LevelManager {
 	}
 	
 	// 점수가 증가하면 배경 맵 변경
-	private void updateBackgroundMap() {
-		int currentLevel = getCurrentLevel(); //현재 레벨
-		String bgackgroundMapPath = "image/backgroundMapService3" + currentLevel + ".png";
-		mContext.getFrontMap().setIcon(new ImageIcon(bgackgroundMapPath));
-	}
+//	private void updateBackgroundMap() {
+//		int currentLevel = getCurrentLevel(); //현재 레벨
+//		String bgackgroundMapPath = "image/backgroundMapService3" + currentLevel + ".png";
+//		mContext.getFrontMap().setIcon(new ImageIcon(bgackgroundMapPath));
+//	}
 
 	// 현재 점수 불러오는 메소드
 	public int getCurrentScore() {
@@ -90,3 +90,4 @@ public class LevelManager {
 	}
 
 }
+

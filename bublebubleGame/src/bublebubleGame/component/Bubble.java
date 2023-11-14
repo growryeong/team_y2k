@@ -247,3 +247,4 @@ public class Bubble extends JLabel {
 		this.up = up;
 	}
 }
+
