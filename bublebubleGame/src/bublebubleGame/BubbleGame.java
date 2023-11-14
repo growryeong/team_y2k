@@ -1,8 +1,18 @@
 package bublebubleGame;
 
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.Rectangle;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.awt.event.KeyAdapter;
 
 import java.awt.event.KeyEvent;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +22,7 @@ import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 
 import bublebubleGame.level.LevelManager;
+import bublebubleGame.choice.ChoiceFrame;
 import bublebubleGame.component.Bubble;
 import bublebubleGame.component.Enemy;
 import bublebubleGame.component.Player;
@@ -25,7 +36,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class BubbleGame extends JFrame {
+public class BubbleGame extends JFrame implements ComponentListener {
 
 	private BubbleGame mContext = this;
 	private JLabel frontMap;
@@ -39,14 +50,57 @@ public class BubbleGame extends JFrame {
 	// 나중에 업데이트 가능하도록 레이블을 인스턴스 변수로 설정
 	private JLabel scoreLabel; // 점수
 	private JLabel levelJLabel; // 레벨
-
+	
+	//private Image buffImage;
+	//private Graphics buffg;
+	private Graphics bufferGraphics;
+	private Image offscreen;
+	private Dimension dim;
+	
 	public BubbleGame() {
+		addComponentListener(this);
 		initObject();
 		initSetting();
 		initListener();
 		initThread();
 		setVisible(true);
+		
 		levelManager = new LevelManager(this); // 레벨 매니저에 BubbleGame 인스턴스 전달
+	}
+	
+	public void initBufferd() {
+        dim = getSize();
+        System.out.println(dim.getSize());
+        //화면의 크기를 가져온다.
+        setBackground(Color.white);
+        //배경 색깔을 흰색으로 변경한다. 
+        offscreen = createImage(dim.width,dim.height);
+        //화면 크기와 똑같은 가상 버퍼(이미지)를 생성한다.
+        bufferGraphics = offscreen.getGraphics(); 
+        //가상버퍼(이미지)로 부터 그래픽스 객체를 얻어옴
+   }
+	
+	@Override
+	public void paint(Graphics g) {
+		bufferGraphics.clearRect(0, 0, dim.width, dim.height);
+		// 배경이미지 그리기
+		BufferedImage bufmap = componenttoImage(frontMap);
+		bufferGraphics.drawImage(bufmap, 0, 0, null);
+				
+		// 캐릭터 그리기
+		BufferedImage bufC = componenttoImage(player);
+		bufferGraphics.drawImage(bufC, player.getX(), player.getY(), 50, 50, null);
+				
+		// 캐릭터 그리기
+		BufferedImage bufE = componenttoImage(enemy);
+		bufferGraphics.drawImage(bufE, enemy.getX(), enemy.getY(), 50, 50, null);
+			
+		g.drawImage(offscreen, 0, 0, this);
+	}
+	
+	@Override
+	public void update(Graphics g) {
+		paint(g);
 	}
 
 	private void initObject() {
@@ -209,7 +263,7 @@ public class BubbleGame extends JFrame {
 	}
 
 	public static void main(String[] args) {
-		new BubbleGame();
+		new ChoiceFrame();
 	
 	}
 
@@ -278,5 +332,71 @@ public class BubbleGame extends JFrame {
 	public void setLevelJLabel(JLabel levelJLabel) {
 		this.levelJLabel = levelJLabel;
 	}
+	
+	// JLabel을 Buffered Image로 변환
+	public BufferedImage componenttoImage(Component component) {
+		BufferedImage img = new BufferedImage(component.getWidth(), component.getHeight(),  BufferedImage.TYPE_INT_ARGB_PRE);
+		Graphics g = img.getGraphics();
+		g.setColor(component.getBackground());
+		g.setFont(component.getFont());
+		component.paintAll(g);
+		Rectangle region = new Rectangle(0, 0, img.getWidth(), img.getHeight());
+		return img.getSubimage(region.x, region.y, region.width, region.height);
+	}
+
+	@Override
+	public void componentResized(ComponentEvent e) {
+		// TODO Auto-generated method stub
+		initBufferd();
+	}
+
+	@Override
+	public void componentMoved(ComponentEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void componentShown(ComponentEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void componentHidden(ComponentEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	// 더블 버퍼링
+	/*
+	@Override
+	protected void paintComponent(Graphics g) {
+		if(buffg == null) {
+			buffImage = createImage(this.getWidth(), this.getHeight());
+			if(buffImage == null) {
+				System.out.println("오프 스크린 생성 실패");
+			} else {
+				buffg = buffImage.getGraphics();
+			}
+		} 
+		
+		super.paintComponents(buffg);
+		
+		// 배경이미지 그리기
+		BufferedImage bufmap = componenttoImage(frontMap);
+		buffg.drawImage(bufmap, 0, 0, null);
+		
+		// 캐릭터 그리기
+		BufferedImage bufC = componenttoImage(player);
+		buffg.drawImage(bufC, player.getX(), player.getY(), 50, 50, null);
+		
+		// 캐릭터 그리기
+		BufferedImage bufE = componenttoImage(enemy);
+		buffg.drawImage(bufE, enemy.getX(), enemy.getY(), 50, 50, null);
+	
+		g.drawImage(buffImage, 0, 0, this);
+	}
+	*/
 
 }
