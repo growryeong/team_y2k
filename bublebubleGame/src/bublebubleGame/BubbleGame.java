@@ -1,14 +1,13 @@
 package bublebubleGame;
 
 import java.awt.Color;
+
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Rectangle;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.KeyAdapter;
@@ -21,7 +20,6 @@ import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JButton;
 import javax.swing.SwingUtilities;
 
 import bublebubleGame.level.LevelManager;
@@ -33,6 +31,7 @@ import bublebubleGame.component.Player;
 import bublebubleGame.music.BGM;
 import lombok.Getter;
 import lombok.Setter;
+
 
 /**
  * @author 겟인데어 FrontMap과 BackMap 테스트
@@ -75,7 +74,8 @@ public class BubbleGame extends JFrame implements ComponentListener {
 		initListener();
 		initThread();
 		setVisible(true);      
-		levelManager = new LevelManager(this); // 레벨 매니저에 BubbleGame 인스턴스 전달
+		// 레벨 매니저에 BubbleGame 인스턴스 전달
+		levelManager = new LevelManager(this); 
    }
 //   private void beforeStarting() {
 //		setTitle("버블버블 게임");
@@ -210,9 +210,24 @@ public class BubbleGame extends JFrame implements ComponentListener {
       });
    }
 
+   
+   
    /*
-    * 점수는 1점 오르고 while문이 종료되었지만 백그라운드 화면이 하얀색으로 날라감
+    * 오류 내용
+    * 기존 오류는 점수가 1초에 1점씩 올라가 while문을 종료 시키는 부분 추가
+    * while문이 종료되었지만 백그라운드 화면이 하얀색으로 사라짐
+    * 그리고 Enemy가 갇힌 버블이 빠른 속도로 위로 올라감
+    * 
+    * -------------------------------------------
+    * 
+    * LevelManager에 updateScore 메소드에 updateBackgroundMap() 호출 부분과 updateBackgroundMap 메소드 주석처리 하니까
+    * 배경 안사라짐
+    *
+    *---------------------------------------------------
+    * 모든 적 처치 시 게임 종료 되는 부분 추가 후 게임 종료 시 현재 점수, 레벨 보여주기
     */
+   
+
    private void initThread() {
       
        boolean[] isRunning = {true}; // 배열을 사용하여 
@@ -224,19 +239,14 @@ public class BubbleGame extends JFrame implements ComponentListener {
 //         boolean isRunning = true;
          
          while (isRunning[0]) {
-               // 플레이어가 적을 처치했는지 확인하고 점수 업데이트
-               boolean enemiesKilled = playerKilledEnemies();
-               if (enemiesKilled) {
-                   SwingUtilities.invokeLater(() -> {
-                       levelManager.updateScore(1);
-                       System.out.println("Player killed an enemy! Current Score: " + levelManager.getCurrentScore());
+             // 플레이어가 적을 처치했는지 확인하고 점수 업데이트
+             boolean enemiesKilled = playerKilledEnemies();
+             if (enemiesKilled) {
+                 SwingUtilities.invokeLater(() -> {
+                     levelManager.updateScore(1);
+                     System.out.println("Player killed an enemy! Current Score: " + levelManager.getCurrentScore());
 
-                       // 레벨 업 조건 충족 여부 확인
-                       boolean levelUp = shouldLevelUP();
-                       if (levelUp) {
-                           levelManager.increaseLevel(player);
-                           System.out.println("Level up! Current Level: " + levelManager.getCurrentLevel());
-                       }
+
 
                        isRunning[0] = false; // 루프 종료
                    });
@@ -251,6 +261,9 @@ public class BubbleGame extends JFrame implements ComponentListener {
          }
       }).start();
    }
+   
+
+
 
    // 레벨 업 조건 충족 여부 확인하는 코드
    public boolean shouldLevelUP() {

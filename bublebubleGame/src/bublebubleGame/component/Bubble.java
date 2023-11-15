@@ -156,7 +156,7 @@ public class Bubble extends JLabel {
 				} else {
 					if (topColor.getRed() == 255 && topColor.getBlue() == 0 && topColor.getGreen() == 0) {
 						setUp(false);
-						bubbleClear();
+						bubbledClear();
 					}
 					Thread.sleep(1);
 				}
@@ -174,25 +174,6 @@ public class Bubble extends JLabel {
 		mContext.repaint();
 	}
 
-	public void bubbleClear() {
-		try {
-			setUp(false);
-			//Thread.sleep(3000);
-			setIcon(bomb);
-			Thread.sleep(1000); // 500 -> 1000 으로 수정
-
-			mContext.remove(this);
-			mContext.repaint();
-			
-			// 적 처치 시 점수 업데이트
-			if(getEnemy() != null && getEnemy().getState() == 0) {
-				mContext.getLevelManager().updateScore(1); // 적을 처치할 때마다 1점 획득
-			}
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-	}
-
 	public void bubbledClear() {
 		try {
 			setUp(false);
@@ -202,11 +183,6 @@ public class Bubble extends JLabel {
 			mContext.repaint();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
-		}
-		
-		// 적 처치 시 점수 업데이트
-		if(getEnemy() != null && getEnemy().getState() == 0) {
-			mContext.getLevelManager().updateScore(1); // 적을 처치하면 1점을 얻는다고 가정
 		}
 	}
 
@@ -247,3 +223,4 @@ public class Bubble extends JLabel {
 		this.up = up;
 	}
 }
+
