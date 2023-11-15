@@ -35,14 +35,10 @@ public class LevelManager {
 		currentLevel++; // 현재 레벨 상승
 		int enemyCount = player.getSpeed() * 2; // 플레이어 속도에 따라 적군 수 생성
 		 for (int i = 0; i < enemyCount; i++) {
-//	            mContext.getBubbleList().addAll((Collection<? extends Bubble>) new Enemy());
 			 Enemy enemyBubble = new Enemy();
 			 
 			 enemyBubble.setState(1); // 초기 상태를 1로 설정하여 살아있는 적 표시
-			 
-			 // 래밸을 올릴때 enemy object 생성하고 mContext.getBubbleList()에 추가
-			 //getBubbleList() -> List<Bubble> = Enemy가 Bubble의 서브 클래스거나 공통 인터페이스 공유해야함
-//			 mContext.getBubbleList().add(enemyBubble); 
+
 			 enemyList.add(enemyBubble);
 			 }
 	}
@@ -51,23 +47,11 @@ public class LevelManager {
 	public void updateScore(int points) {
 		currentScore += points;
 		updateScoreLabel(); // 점수 라벨 업데이트
-		
-		// 점수 상승 확인 및 배경 맵 업데이트
-//		if(points > 0) {
-//			updateBackgroundMap();
-//		}
 	}
 	
 	private void updateScoreLabel() {
 	    mContext.getScoreLabel().setText("Score: " + currentScore);
 	}
-	
-	// 점수가 증가하면 배경 맵 변경
-//	private void updateBackgroundMap() {
-//		int currentLevel = getCurrentLevel(); //현재 레벨
-//		String bgackgroundMapPath = "image/backgroundMapService3" + currentLevel + ".png";
-//		mContext.getFrontMap().setIcon(new ImageIcon(bgackgroundMapPath));
-//	}
 
 	// 현재 점수 불러오는 메소드
 	public int getCurrentScore() {
@@ -90,4 +74,3 @@ public class LevelManager {
 	}
 
 }
-
