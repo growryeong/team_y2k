@@ -60,6 +60,9 @@ public class Player extends JLabel implements Moveable {
 		}else if(character == 2) {
 			playerR = new ImageIcon("image/Bub2Right.png");
 			playerL = new ImageIcon("image/Bub2Left.png");
+		}else if(character == 3) {
+			playerR = new ImageIcon("image/bub3Right.png");
+			playerL = new ImageIcon("image/bub3Left.png");
 		}
 	}
 
