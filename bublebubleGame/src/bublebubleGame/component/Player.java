@@ -5,6 +5,7 @@ import javax.swing.JLabel;
 
 import bublebubleGame.BubbleGame;
 import bublebubleGame.Moveable;
+import bublebubleGame.choice.ChoiceFrame;
 import bublebubleGame.direction.PlayerDirection;
 import bublebubleGame.service.BackgroundPlayerService;
 import lombok.Getter;
@@ -18,6 +19,7 @@ public class Player extends JLabel implements Moveable {
 	private int y;
 	
 	private BubbleGame mContext;
+	private ChoiceFrame choiceFrame;
 
 //	움직임 상태
 	private boolean left;
@@ -48,10 +50,20 @@ public class Player extends JLabel implements Moveable {
 	}
 	
 	private void initObject() {
-		playerR = new ImageIcon("image/playerR.png");
-		playerL = new ImageIcon("image/playerL.png");
+		int character=ChoiceFrame.getCharacter(); //ChoiceFrame의 character값 가져오기
+		System.out.println(character);
+		
+		// character이 1이라면 1번 캐릭터, character이 2라면 2번 캐릭터
+		if(character == 1) {
+			playerR = new ImageIcon("image/playerR.png");
+			playerL = new ImageIcon("image/playerL.png");
+		}else if(character == 2) {
+			playerR = new ImageIcon("image/Bub2Right.png");
+			playerL = new ImageIcon("image/Bub2Left.png");
+		}
 	}
 
+	
 	private void initSetting() {
 		x = 55;
 		y = 535;

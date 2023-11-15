@@ -1,6 +1,7 @@
 package bublebubleGame.component;
 
 import java.awt.Color;
+
 import java.awt.image.BufferedImage;
 import java.io.File;
 
@@ -175,12 +176,18 @@ public class Bubble extends JLabel {
 
 	public void bubbleClear() {
 		try {
-			Thread.sleep(3000);
+			setUp(false);
+			//Thread.sleep(3000);
 			setIcon(bomb);
-			Thread.sleep(500);
+			Thread.sleep(1000); // 500 -> 1000 으로 수정
 
 			mContext.remove(this);
 			mContext.repaint();
+			
+			// 적 처치 시 점수 업데이트
+			if(getEnemy() != null && getEnemy().getState() == 0) {
+				mContext.getLevelManager().updateScore(1); // 적을 처치할 때마다 1점 획득
+			}
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -196,6 +203,16 @@ public class Bubble extends JLabel {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+		
+		// 적 처치 시 점수 업데이트
+		if(getEnemy() != null && getEnemy().getState() == 0) {
+			mContext.getLevelManager().updateScore(1); // 적을 처치하면 1점을 얻는다고 가정
+		}
+	}
+
+	private Enemy getEnemy() {
+		// 적 처치 시 점수 업데이트때 사용하기 위해 
+		return enemy;
 	}
 
 	public boolean isLeft() {
