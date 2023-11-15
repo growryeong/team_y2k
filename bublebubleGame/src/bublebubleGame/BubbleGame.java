@@ -104,7 +104,7 @@ public class BubbleGame extends JFrame implements ComponentListener {
         offscreen = createImage(dim.width,dim.height);
         //화면 크기와 똑같은 가상 버퍼(이미지)를 생성한다.
         bufferGraphics = offscreen.getGraphics(); 
-        //가상버퍼(이미지)로 부터 그래픽스 객체를 얻어옴
+        //가상버퍼(이미지)로 부터 그래픽스 객체를 얻어옴 
    }
    
    @Override
