@@ -375,20 +375,20 @@ public class BubbleGame extends JFrame implements ComponentListener, Runnable {
    
    // 플레이어가 적을 죽였는지 확인하는 코드 구현
    private void playerKilledEnemies() {
-    System.out.println("playerKilledEnemies 호출");
-    
-    if(cnt == 1) {
-       stop();
-         endGame();
-
-    }else if(cnt == 3) {
-       stop();
-         endGame();
-
-    }else if(cnt == 6) {
-       stop();
-         endGame();
-    }
+	    System.out.println("playerKilledEnemies 호출");
+	    
+	    if(cnt == 1) {
+	       stop();
+	       endGame();
+	
+	    }else if(cnt == 3) {
+	       stop();
+	       endGame();
+	
+	    }else if(cnt == 6) {
+	       stop();
+	       endGame();
+	    }
    }
    
    static boolean check;

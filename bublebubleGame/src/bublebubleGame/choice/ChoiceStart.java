@@ -25,14 +25,14 @@ public class ChoiceStart extends JFrame implements ActionListener{
    ImageIcon startBtnImg = new ImageIcon("image/tapToStart.png");
    
    public ChoiceStart() {
-      setTitle("버블버블 게임"); 
+	   setTitle("버블버블 게임"); 
        setSize(1000, 640);
        setLayout(null);
        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
        introImage = new JLabel(new ImageIcon(introFileName));
        setLocationRelativeTo(null);
        startBtn = new JButton(startBtnImg);
-       startBtn.setBounds(340, 482, 335, 39);
+       startBtn.setBounds(329, 512, 310, 65);
        introImage.add(startBtn);
        startBtn.addActionListener(this);
        setContentPane(introImage);
