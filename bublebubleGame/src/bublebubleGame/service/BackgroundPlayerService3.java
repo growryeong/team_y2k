@@ -19,7 +19,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class BackgroundPlayerService implements Runnable {
+public class BackgroundPlayerService3 implements Runnable {
 	private BufferedImage image;
 	private Player player;
 	private List<Bubble> bubbleList;
@@ -28,12 +28,12 @@ public class BackgroundPlayerService implements Runnable {
 	
 	static int nextLevel;
 
-	public BackgroundPlayerService(BubbleGame mContext, Player player) {
+	public BackgroundPlayerService3(BubbleGame mContext, Player player) {
 		this.player = player;
 		this.bubbleList = mContext.getBubbleList();
 		this.setmContext(mContext);
 		try {
-			image = ImageIO.read(new File("image/backgroundMapService.png"));
+			image = ImageIO.read(new File("image/backgroundMapService3.png"));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

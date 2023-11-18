@@ -4,9 +4,14 @@ import javax.swing.ImageIcon;
 
 import javax.swing.JLabel;
 
+import bublebubleGame.BubbleGame;
 import bublebubleGame.Moveable;
 import bublebubleGame.direction.EnemyDirection;
 import bublebubleGame.service.BackgroundEnemyService;
+import bublebubleGame.service.BackgroundEnemyService2;
+import bublebubleGame.service.BackgroundEnemyService3;
+import bublebubleGame.service.BackgroundPlayerService;
+import bublebubleGame.service.BackgroundPlayerService2;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -38,13 +43,10 @@ public class Enemy extends JLabel implements Moveable {
    public Enemy() {
       initObject();
       initSetting();
-   }
-
-   public void start() {
-      initBackgroundEnemyService();
       setState(0);
       setEnemyDirection(EnemyDirection.RIGHT);
       left();
+      initBackgroundEnemyService();
    }
 
    private void initObject() {
@@ -53,7 +55,8 @@ public class Enemy extends JLabel implements Moveable {
    }
 
    private void initSetting() {
-      x = 480;
+	  // Enemy생성시 위치 랜덤 설정
+      x = (int) (Math.random() * 899) + 100;
       y = 178;
 
       left = false;
@@ -70,12 +73,19 @@ public class Enemy extends JLabel implements Moveable {
    }
 
    private void initBackgroundEnemyService() {
-      new Thread(new BackgroundEnemyService(this)).start();
+      int nextLevel=BubbleGame.getNextLevel();
+      // BackgroundEnemyService를 1, 2, 3 3개를 만들어서 nextLevel값에 따라 변경
+	   if(nextLevel == 1) {
+		   new Thread(new BackgroundEnemyService(this)).start();
+	   }else if(nextLevel == 2) {
+		   new Thread(new BackgroundEnemyService2(this)).start();
+	   }else if(nextLevel == 3) {
+		   new Thread(new BackgroundEnemyService3(this)).start();
+	   }
    }
 
    @Override
    public void up() {
-      System.out.println("UP");
       setUp(true);
       Thread t = new Thread(() -> {
 
@@ -99,7 +109,6 @@ public class Enemy extends JLabel implements Moveable {
 
    @Override
    public void down() {
-      System.out.println("DOWN");
       down = true;
       Thread t = new Thread(() -> {
          while (down) {
@@ -120,7 +129,6 @@ public class Enemy extends JLabel implements Moveable {
 
    @Override
    public void left() {
-      System.out.println("LEFT");
       setEnemyDirection(EnemyDirection.LEFT);
       setIcon(enemyL);
       left = true;
@@ -145,7 +153,6 @@ public class Enemy extends JLabel implements Moveable {
 
    @Override
    public void right() {
-      System.out.println("RIGHT");
       setEnemyDirection(EnemyDirection.RIGHT);
       setIcon(enemyR);
 

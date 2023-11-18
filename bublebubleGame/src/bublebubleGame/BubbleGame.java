@@ -1,17 +1,14 @@
 package bublebubleGame;
 
 import java.awt.Color;
-
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.KeyAdapter;
-
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -20,15 +17,17 @@ import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
-import bublebubleGame.level.LevelManager;
 import bublebubleGame.choice.ChoiceFrame;
 import bublebubleGame.choice.ChoiceStart;
 import bublebubleGame.component.Bubble;
 import bublebubleGame.component.Enemy;
 import bublebubleGame.component.Player;
+import bublebubleGame.level.LevelManager;
 import bublebubleGame.music.BGM;
+import bublebubleGame.service.BackgroundPlayerService;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -39,21 +38,33 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class BubbleGame extends JFrame implements ComponentListener {
+public class BubbleGame extends JFrame implements ComponentListener, Runnable {
 
    private BubbleGame mContext = this;
    private JLabel frontMap;
 
    private Player player;
-   private Enemy enemy;
+   
+   // Enemy를 List로 관리
+   private List<Enemy> enemy;
+   
+   private Bubble bubble;
 
    private List<Bubble> bubbleList;
    
-//	시작 화면 만들기
-//	JLabel introImage;
-//	private String introFileName = "image/bublebubleStart.png";
-//	public JButton startBtn;
-//	ImageIcon startBtnImg = new ImageIcon("image/tapToStart.png");
+   private BufferedImage image;
+
+   // 종료 변수   
+   protected boolean stop = false;
+
+   public int cnt;
+   public int num;
+   public int temp;
+//   시작 화면 만들기
+//   JLabel introImage;
+//   private String introFileName = "image/bublebubleStart.png";
+//   public JButton startBtn;
+//   ImageIcon startBtnImg = new ImageIcon("image/tapToStart.png");
    
 
    private LevelManager levelManager; // 레벨
@@ -68,36 +79,35 @@ public class BubbleGame extends JFrame implements ComponentListener {
    private Dimension dim;
    
    public BubbleGame() {
-		addComponentListener(this);
-		initObject();
-		initSetting();
-		initListener();
-		initThread();
-		setVisible(true);      
-		// 레벨 매니저에 BubbleGame 인스턴스 전달
-		levelManager = new LevelManager(this); 
+      addComponentListener(this);
+      initObject();
+      initSetting();
+      initListener();
+      setVisible(true); 
+      // 레벨 매니저에 BubbleGame 인스턴스 전달
+      levelManager = new LevelManager(this); 
    }
 //   private void beforeStarting() {
-//		setTitle("버블버블 게임");
-//		setSize(1000, 640);
-//		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//		introImage = new JLabel(new ImageIcon(introFileName));
-//		setLayout(null);
-//		setLocationRelativeTo(null);
-//		startBtn = new JButton(startBtnImg);
-//		startBtn.setBounds(340, 482, 335, 39);
-////		startBtn.setBorderPainted(false);
-//		introImage.add(startBtn);
-//		startBtn.addActionListener(this);
-//		setContentPane(introImage);
-//		setVisible(true);
-//	}
+//      setTitle("버블버블 게임");
+//      setSize(1000, 640);
+//      setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//      introImage = new JLabel(new ImageIcon(introFileName));
+//      setLayout(null);
+//      setLocationRelativeTo(null);
+//      startBtn = new JButton(startBtnImg);
+//      startBtn.setBounds(340, 482, 335, 39);
+////      startBtn.setBorderPainted(false);
+//      introImage.add(startBtn);
+//      startBtn.addActionListener(this);
+//      setContentPane(introImage);
+//      setVisible(true);
+//   }
    
 
    
    public void initBufferd() {
         dim = getSize();
-        System.out.println(dim.getSize());
+        //System.out.println(dim.getSize());
         //화면의 크기를 가져온다.
         setBackground(Color.white);
         //배경 색깔을 흰색으로 변경한다. 
@@ -118,40 +128,72 @@ public class BubbleGame extends JFrame implements ComponentListener {
       BufferedImage bufC = componenttoImage(player);
       bufferGraphics.drawImage(bufC, player.getX()+6, player.getY()+30, 50, 50, null);
             
-      // 캐릭터 그리기
-      BufferedImage bufE = componenttoImage(enemy);
-      bufferGraphics.drawImage(bufE, enemy.getX()+6, enemy.getY()+30, 50, 50, null);
+      // Enemy 더블 버퍼링 미구현
+      //BufferedImage bufE = componenttoImage(enemy);
+      //bufferGraphics.drawImage(bufE, enemy.getX()+6, enemy.getY()+30, 50, 50, null);
          
       g.drawImage(offscreen, 0, 0, this);
+      
    }
    
    @Override
    public void update(Graphics g) {
       paint(g);
    }
-
+   
+   // portal
+   private ImageIcon portal;
+   
    private void initObject() {
       bubbleList = new ArrayList<>();
-      enemy = new Enemy();
+      enemy = new ArrayList<Enemy>();
       player = new Player(mContext);
 
-//      frontMap = new JLabel(new ImageIcon("image/backgroundMap3.png"));
-
-      frontMap = new JLabel(new ImageIcon("image/backgroundMap.png"));
-
-      new BGM();
+      // nextLevel값에 따라 backgorundMap(1~3)변경
+      if(nextLevel==1) {
+    	  frontMap = new JLabel(new ImageIcon("image/backgroundMap.png"));
+      }
+      if(nextLevel==2) {
+    	  frontMap = new JLabel(new ImageIcon("image/backgroundMap2.png"));
+      }
+      if(nextLevel==3) {
+    	  frontMap = new JLabel(new ImageIcon("image/backgroundMap3.png"));
+      }
    }
 
    private void initSetting() {
-	  setTitle("버블버블 게임");
-	  setSize(1000, 640);
-	  setLayout(null);
-	  setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	  setLocationRelativeTo(null);
-	  setContentPane(frontMap);
-      add(player);
-      add(enemy);
-
+     setTitle("버블버블 게임");
+     setSize(1000, 640);
+     setLayout(null);
+     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+     setLocationRelativeTo(null);
+     setContentPane(frontMap);
+     add(player);
+     
+     // nextLevel에 따라 Enemy의 수 변경
+     if(nextLevel==1) {
+    	 enemy.add(new Enemy());
+    	 for(Enemy e : enemy) add(e);
+     }else if(nextLevel==2) {
+    	 enemy.add(new Enemy());
+    	 enemy.add(new Enemy());
+    	 for(Enemy e : enemy) add(e);
+     }else if(nextLevel==3) {
+    	 enemy.add(new Enemy());
+    	 enemy.add(new Enemy());
+    	 enemy.add(new Enemy());
+    	 for(Enemy e : enemy) add(e);
+     }
+     
+     // 포탈 이미지
+     JLabel portal1 = new JLabel();
+     portal = new ImageIcon("image/portal.png");
+     portal1.setIcon(portal);
+     portal1.setBounds(870, 510, 50, 65);
+     add(portal1);
+     
+     cnt=0;
+     
       // 현재 점수 및 레벨을 표시하는 레이블 추가
       JLabel scoreLabel = new JLabel("score : 0");
       JLabel levelLabel = new JLabel("level : 1");
@@ -166,9 +208,14 @@ public class BubbleGame extends JFrame implements ComponentListener {
 
       this.scoreLabel = scoreLabel;
       this.setLevelJLabel(levelLabel);
+      
    }
 
-  
+   static int nextLevel=1;
+   
+   public static int getNextLevel() {
+		return nextLevel;
+	}
    
    private void initListener() {
       addKeyListener(new KeyAdapter() {
@@ -189,11 +236,39 @@ public class BubbleGame extends JFrame implements ComponentListener {
                   player.up();
                break;
             case KeyEvent.VK_SPACE:
-               Bubble bubble = new Bubble(mContext, enemy, player);
+               Bubble bubble = new Bubble(mContext, player);
                bubbleList.add(bubble);
                add(bubble);
                break;
+            case KeyEvent.VK_DOWN:
+            	// 포탈을 타는 버튼
+            	BackgroundPlayerService bgs = new BackgroundPlayerService(mContext, player);
+            	
+            	image = bgs.getImage();
+            	Color centerColor = new Color(image.getRGB(player.getX() + 25, player.getY() + 25));
+            	
+            	// bubbledClear가 실행될 때 enemykill의 값이 1씩 오르도록 설정함
+            	int enemykill = Bubble.getEnemykill();
+            	
+            	// BackgroundPlayerService이미지 오른쪽 아래 검정색 공간을 추가
+            	// 플레이어의 위치가 검정색 위에 있고 적을 죽이면 오르는 nextLevel값이 조건을 충족하면 창을 다시 실행
+            	// nextLevel의 값(0, 1, 2)에 따라 백그라운드 맵과 서비스맵이 변경 되도록 설정함
+            	if (centerColor.getRed() == 0 && centerColor.getBlue() == 0 && centerColor.getGreen() == 0 
+            			&& nextLevel==1 && enemykill ==1) {
+            		nextLevel++;
+					setVisible(false);
+					check=false;;
+					new BubbleGame();
+				}else if(centerColor.getRed() == 0 && centerColor.getBlue() == 0 && centerColor.getGreen() == 0 
+            			&& nextLevel==2 && enemykill ==3) {
+					nextLevel++;
+					setVisible(false);
+					check=false;;
+					new BubbleGame();
+				}
+            	break;
             }
+            	
          }
 
          @Override
@@ -226,48 +301,40 @@ public class BubbleGame extends JFrame implements ComponentListener {
     *---------------------------------------------------
     * 모든 적 처치 시 게임 종료 되는 부분 추가 후 게임 종료 시 현재 점수, 레벨 보여주기
     */
+
    
-
-   private void initThread() {
-      
-       boolean[] isRunning = {true}; // 배열을 사용하여 
-      
-      new Thread(() -> {
-         enemy.start();
-//         gameLoop();
-         
-//         boolean isRunning = true;
-         
-         while (isRunning[0]) {
-             // 플레이어가 적을 처치했는지 확인하고 점수 업데이트
-             boolean enemiesKilled = playerKilledEnemies();
-             if (enemiesKilled) {
-                 SwingUtilities.invokeLater(() -> {
-                     levelManager.updateScore(1);
-                     System.out.println("Player killed an enemy! Current Score: " + levelManager.getCurrentScore());
-
-
-
-                       isRunning[0] = false; // 루프 종료
-                   });
-               }
-                  
-               // 과도한 루프 실행 방지를 위한 시간 지연
-               try {
-                   Thread.sleep(1000); // 필요에 따라 시간 수정
-               } catch (InterruptedException e) {
-                   e.printStackTrace();
-               }
-         }
-      }).start();
+   
+   
+// 게임 종료 정보 표시
+   private void endGame() {
+      System.out.println("Game Over!");
+      System.out.println("Final Score: " + levelManager.getCurrentScore());
+      System.out.println("Final Level: " + levelManager.getCurrentLevel());
+      SwingUtilities.invokeLater(()->{
+         System.out.println("Game Over! Final Score: " + levelManager.getCurrentScore());
+         showFinalScoreDialog();
+      });
    }
+   
+//   최종 점수 보여주기
+   public void showFinalScoreDialog() {
+      int fiinalScore = levelManager.getCurrentScore();
+      String message = "Game Over!\nFinal Score: "+fiinalScore;
+      JOptionPane.showMessageDialog(this, message, "Game Over", JOptionPane.INFORMATION_MESSAGE);
+   }
+   
+//   종료 함수
+   public void stop() {
+      stop = true;
+   }
+   
+   
    
 
 
 
    // 레벨 업 조건 충족 여부 확인하는 코드
    public boolean shouldLevelUP() {
-
       // levelManager가 null인지 확인
       if (levelManager != null) {
          // 레벨 조건
@@ -287,25 +354,51 @@ public class BubbleGame extends JFrame implements ComponentListener {
       }
       return false;
    }
+   
+   @Override
+   public void run() {
+	   while(true) {
+		   try {
 
-   // 플레이어가 적을 죽였는지 확인하는 코드 구현
-   private boolean playerKilledEnemies() {
-      boolean enemiesKilled = false; // 기본값
-      
-      // bubbleList를 반복하고 각 버블의 상태 확인 , 버블의 상태 == 1이면 levelManager.increaseEnemiesDefeated() 호츌
-      for (Bubble bubble : bubbleList) {
-         if (bubble.getState() == 1) { // 버블 안에 있는 상태 1
-            // 플레이어가 적 공격하는데 성공
-            levelManager.increaseEnemiesDefeated(); // 처치한 적 수 증가
-            bubble.setState(0); // 상태를 0으로 재설정
-            enemiesKilled = true; // 적을 한 명 이상 처치하면 true
-            System.out.println("Enemy killed! State: " + bubble.getState()); // 메서드가 호출되고 있는지 상태가 업데이트 되는지 확인
-         }
-      }
-      return enemiesKilled;
+				new Thread(() -> {
+
+					
+				}).start();
+				
+			} catch (Exception e) {
+				System.out.println("Error : " + e.getMessage());
+			}
+		}
+		   
    }
+		  
+   
+   // 플레이어가 적을 죽였는지 확인하는 코드 구현
+   private void playerKilledEnemies() {
+    System.out.println("playerKilledEnemies 호출");
+    
+    if(cnt == 1) {
+       stop();
+         endGame();
 
+    }else if(cnt == 3) {
+       stop();
+         endGame();
+
+    }else if(cnt == 6) {
+       stop();
+         endGame();
+    }
+   }
+   
+   static boolean check;
+   
    public static void main(String[] args) {
+	  
+	  Gameover over = new Gameover();
+	  over.start();
+	  new BGM();
+	  
       new ChoiceStart();
    
    }
@@ -330,10 +423,6 @@ public class BubbleGame extends JFrame implements ComponentListener {
       return player;
    }
 
-   public Enemy getEnemy() {
-      return enemy;
-   }
-
    public List<Bubble> getBubbleList() {
       return bubbleList;
    }
@@ -348,10 +437,6 @@ public class BubbleGame extends JFrame implements ComponentListener {
 
    public void setPlayer(Player player) {
       this.player = player;
-   }
-
-   public void setEnemy(Enemy enemy) {
-      this.enemy = enemy;
    }
 
    public void setBubbleList(List<Bubble> bubbleList) {
@@ -410,36 +495,5 @@ public class BubbleGame extends JFrame implements ComponentListener {
       // TODO Auto-generated method stub
       
    }
-   
-   // 더블 버퍼링
-   /*
-   @Override
-   protected void paintComponent(Graphics g) {
-      if(buffg == null) {
-         buffImage = createImage(this.getWidth(), this.getHeight());
-         if(buffImage == null) {
-            System.out.println("오프 스크린 생성 실패");
-         } else {
-            buffg = buffImage.getGraphics();
-         }
-      } 
-      
-      super.paintComponents(buffg);
-      
-      // 배경이미지 그리기
-      BufferedImage bufmap = componenttoImage(frontMap);
-      buffg.drawImage(bufmap, 0, 0, null);
-      
-      // 캐릭터 그리기
-      BufferedImage bufC = componenttoImage(player);
-      buffg.drawImage(bufC, player.getX(), player.getY(), 50, 50, null);
-      
-      // 캐릭터 그리기
-      BufferedImage bufE = componenttoImage(enemy);
-      buffg.drawImage(bufE, enemy.getX(), enemy.getY(), 50, 50, null);
-   
-      g.drawImage(buffImage, 0, 0, this);
-   }
-   */
 
 }
