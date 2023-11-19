@@ -105,64 +105,65 @@ public class Bubble extends JLabel {
       }).start();
    }
 
-   public void shootLeft() {
-      for (int i = 0; i < 400; i++) {
-         try {
-            setLocation(x, y);
-
-            setLeft(true);
-            x--;
-            Color leftColor = new Color(image.getRGB(x - 10, y + 25));
-            if (leftColor.getRed() == 255 && leftColor.getBlue() == 0 && leftColor.getGreen() == 0) {
-               break;
-            }
-            for(Enemy e : enemy) {
-            	if (Math.abs(x - e.getX()) < 10 && Math.abs(y - e.getY()) < 50) {
-
-               if (e.getState() == 0) {
-                  attack(e);
-                  break;
-               }
-            }
-            }
-            Thread.sleep(1);
-         } catch (Exception e) {
-            System.out.println("Error : " + e.getMessage());
-         }
-
-      }
-      setLeft(false);
-      shootUp();
+   public void shootLeft() {  
+      left = true;
+		Stop:for(int i=0; i<400; i++) {
+			x--;
+			setLocation(x, y);
+			
+			Color leftColor = new Color(image.getRGB(x + 10, y + 25));
+          if (leftColor.getRed() == 255 && leftColor.getBlue() == 0 && leftColor.getGreen() == 0) {
+             break;
+          }
+			
+			// 아군과 적군의 거리가 10
+			for (Enemy e : enemy) {
+				if (Math.abs(x - e.getX()) < 10 && Math.abs(y - e.getY()) > 0 && Math.abs(y - e.getY()) < 50) {
+					if (e.getState() == 0) {
+						attack(e);
+						break Stop;
+					}
+				}
+			}
+			
+			try {
+				Thread.sleep(1);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		shootUp();
    }
 
    public void shootRight() {
-      for (int i = 0; i < 400; i++) {
-         try {
-            setLocation(x, y);
-
-            setRight(true);
-            x++;
-            Color rightColor = new Color(image.getRGB(x + 50 + 10, y + 25));
+	  
+	   	right = true;
+		Stop:for(int i=0; i<400; i++) {
+			x++;
+			setLocation(x, y);
+			
+			Color rightColor = new Color(image.getRGB(x + 50 + 10, y + 25));
             if (rightColor.getRed() == 255 && rightColor.getBlue() == 0 && rightColor.getGreen() == 0) {
                break;
             }
-            
-            for (Enemy e : enemy) {
-            if (Math.abs(x - e.getX()) < 10 && Math.abs(y - e.getY()) < 50) {
-               if (e.getState() == 0) {
-                  attack(e);
-                  break;
-               }
-            }
-            }
-            Thread.sleep(1);
-         } catch (Exception e) {
-            System.out.println("Error : " + e.getMessage());
-         }
-
-      }
-      setRight(false);
-      shootUp();
+			
+			// 아군과 적군의 거리가 10
+			for (Enemy e : enemy) {
+				if (Math.abs(x - e.getX()) < 10 && Math.abs(y - e.getY()) > 0 && Math.abs(y - e.getY()) < 50) {
+					if (e.getState() == 0) {
+						attack(e);
+						break Stop;
+					}
+				}
+			}
+			
+			try {
+				Thread.sleep(1);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		shootUp();
    }
 
    public void shootUp() {
@@ -206,10 +207,20 @@ public class Bubble extends JLabel {
 		return check;
 	}
    
+   private List<Bubble> bubbleList;
+   
    public void bubbleClear() {
 	      try {
 	         setUp(false);
 	         setIcon(bomb);
+	         
+	         /*
+	         // 레벨에 따라 맵에 버블을 날리수 있는 개수가 다르게 설정
+        	 // 스페이스바를 연타하게 되면 오류가 좀 있음
+	         bubbleList = mContext.getBubbleList();
+	         bubbleList.remove(this);
+	         */
+	         
 	         //setEnemyCount();
 	         Thread.sleep(1000);
 	         mContext.remove(this);
@@ -232,18 +243,21 @@ public class Bubble extends JLabel {
       try {
          setUp(false);
          setIcon(bomb);
-         //setEnemyCount();
+      // 한번만 실행하기 위해 check가 true인지 false인지 조건을 줌
+         
          Thread.sleep(1000);
          mContext.remove(this);
          mContext.repaint();
-         // 한번만 실행하기 위해 check가 true인지 false인지 조건을 줌
-         if(!check) {
-        	 enemykill++;
-        	 check=true;
-         }
       } catch (InterruptedException e) {
          e.printStackTrace();
       }
+   }
+   public void bubbledCount() {
+	   if(!check) {
+		   enemykill++;
+		   check=true;
+		   System.out.println(enemykill);
+	   }
    }
    
 //   죽인 적 카운트

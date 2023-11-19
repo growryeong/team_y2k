@@ -13,6 +13,7 @@ import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Delayed;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -69,8 +70,6 @@ public class BubbleGame extends JFrame implements ComponentListener, Runnable {
 
    private LevelManager levelManager; // 레벨
    // 나중에 업데이트 가능하도록 레이블을 인스턴스 변수로 설정
-   private JLabel scoreLabel; // 점수
-   private JLabel levelJLabel; // 레벨
    
    //private Image buffImage;
    //private Graphics buffg;
@@ -122,11 +121,11 @@ public class BubbleGame extends JFrame implements ComponentListener, Runnable {
       bufferGraphics.clearRect(0, 0, dim.width, dim.height);
       // 배경이미지 그리기
       BufferedImage bufmap = componenttoImage(frontMap);
-      bufferGraphics.drawImage(bufmap, 6, 30, null);
+      bufferGraphics.drawImage(bufmap, 7, 31, null);
             
       // 캐릭터 그리기
       BufferedImage bufC = componenttoImage(player);
-      bufferGraphics.drawImage(bufC, player.getX()+6, player.getY()+30, 50, 50, null);
+      bufferGraphics.drawImage(bufC, player.getX()+7, player.getY()+31, 50, 50, null);
             
       // Enemy 더블 버퍼링 미구현
       //BufferedImage bufE = componenttoImage(enemy);
@@ -193,21 +192,6 @@ public class BubbleGame extends JFrame implements ComponentListener, Runnable {
      add(portal1);
      
      cnt=0;
-     
-      // 현재 점수 및 레벨을 표시하는 레이블 추가
-      JLabel scoreLabel = new JLabel("score : 0");
-      JLabel levelLabel = new JLabel("level : 1");
-
-      // 레이블 위치 설정
-      scoreLabel.setBounds(10, 10, 100, 20);
-      levelLabel.setBounds(10, 30, 100, 20);
-
-      // 레이블 프레임에 추가
-      add(scoreLabel);
-      add(levelLabel);
-
-      this.scoreLabel = scoreLabel;
-      this.setLevelJLabel(levelLabel);
       
    }
 
@@ -238,8 +222,22 @@ public class BubbleGame extends JFrame implements ComponentListener, Runnable {
             case KeyEvent.VK_SPACE:
                Bubble bubble = new Bubble(mContext, player);
                bubbleList.add(bubble);
-               add(bubble);
-               break;
+        	   add(bubble);
+        	   /*
+        	   // 레벨에 따라 맵에 버블을 날리수 있는 개수가 다르게 설정
+        	   // 스페이스바를 연타하게 되면 오류가 좀 있음
+               if(bubbleList.size()< 2 && nextLevel == 1) {
+            	   bubbleList.add(bubble);
+            	   add(bubble);
+               } else if (bubbleList.size()< 3 && nextLevel == 2) {
+            	   bubbleList.add(bubble);
+            	   add(bubble);
+               } else if (bubbleList.size()< 4 && nextLevel == 3) {
+            	   bubbleList.add(bubble);
+            	   add(bubble);
+               }
+               */
+           
             case KeyEvent.VK_DOWN:
             	// 포탈을 타는 버튼
             	BackgroundPlayerService bgs = new BackgroundPlayerService(mContext, player);
@@ -254,17 +252,20 @@ public class BubbleGame extends JFrame implements ComponentListener, Runnable {
             	// 플레이어의 위치가 검정색 위에 있고 적을 죽이면 오르는 nextLevel값이 조건을 충족하면 창을 다시 실행
             	// nextLevel의 값(0, 1, 2)에 따라 백그라운드 맵과 서비스맵이 변경 되도록 설정함
             	if (centerColor.getRed() == 0 && centerColor.getBlue() == 0 && centerColor.getGreen() == 0 
-            			&& nextLevel==1 && enemykill ==1) {
+            			&& nextLevel==1 && enemykill == 1) {
             		nextLevel++;
 					setVisible(false);
 					check=false;;
 					new BubbleGame();
 				}else if(centerColor.getRed() == 0 && centerColor.getBlue() == 0 && centerColor.getGreen() == 0 
-            			&& nextLevel==2 && enemykill ==3) {
+            			&& nextLevel==2 && enemykill == 3) {
 					nextLevel++;
 					setVisible(false);
 					check=false;;
 					new BubbleGame();
+				}else if(centerColor.getRed() == 0 && centerColor.getBlue() == 0 && centerColor.getGreen() == 0 
+            			&& nextLevel==3 && enemykill == 6) {
+					
 				}
             	break;
             }
@@ -375,20 +376,20 @@ public class BubbleGame extends JFrame implements ComponentListener, Runnable {
    
    // 플레이어가 적을 죽였는지 확인하는 코드 구현
    private void playerKilledEnemies() {
-	    System.out.println("playerKilledEnemies 호출");
-	    
-	    if(cnt == 1) {
-	       stop();
-	       endGame();
-	
-	    }else if(cnt == 3) {
-	       stop();
-	       endGame();
-	
-	    }else if(cnt == 6) {
-	       stop();
-	       endGame();
-	    }
+    System.out.println("playerKilledEnemies 호출");
+    
+    if(cnt == 1) {
+       stop();
+         endGame();
+
+    }else if(cnt == 3) {
+       stop();
+         endGame();
+
+    }else if(cnt == 6) {
+       stop();
+         endGame();
+    }
    }
    
    static boolean check;
@@ -447,19 +448,6 @@ public class BubbleGame extends JFrame implements ComponentListener, Runnable {
       // Bubble 클래스에서 getLevelManager 사용하기 위해서
       return levelManager;
    }
-
-   public JLabel getScoreLabel() {
-      // Getter 메소드 추가
-      return scoreLabel;
-   }
-
-   public JLabel getLevelJLabel() {
-      return levelJLabel;
-   }
-
-   public void setLevelJLabel(JLabel levelJLabel) {
-      this.levelJLabel = levelJLabel;
-   }
    
    // JLabel을 Buffered Image로 변환
    public BufferedImage componenttoImage(Component component) {
@@ -495,5 +483,12 @@ public class BubbleGame extends JFrame implements ComponentListener, Runnable {
       // TODO Auto-generated method stub
       
    }
+
+
+
+public List<Enemy> getEnemy() {
+	// TODO Auto-generated method stub
+	return enemy;
+}
 
 }

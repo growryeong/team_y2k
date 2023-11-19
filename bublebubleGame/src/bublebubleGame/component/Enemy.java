@@ -56,7 +56,7 @@ public class Enemy extends JLabel implements Moveable {
 
    private void initSetting() {
 	  // Enemy생성시 위치 랜덤 설정
-      x = (int) (Math.random() * 899) + 100;
+      x = (int) (Math.random() * 700) + 100;
       y = 178;
 
       left = false;

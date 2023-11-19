@@ -74,12 +74,6 @@ public class LevelManager {
 		
 	}
 	
-	private void updateScoreLabel() {
-		
-		mContext.getScoreLabel().setText("Score: " + currentScore);
-		
-	}
-	
 	// 점수가 증가하면 배경 맵 변경
 	private void updateBackgroundMap() {
 		int currentLevel = getCurrentLevel(); //현재 레벨

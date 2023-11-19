@@ -25,7 +25,7 @@ public class ChoiceStart extends JFrame implements ActionListener{
    ImageIcon startBtnImg = new ImageIcon("image/tapToStart.png");
    
    public ChoiceStart() {
-	   setTitle("버블버블 게임"); 
+      setTitle("버블버블 게임"); 
        setSize(1000, 640);
        setLayout(null);
        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

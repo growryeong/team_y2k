@@ -7,6 +7,8 @@ import java.io.File;
 import java.util.List;
 
 import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 
 import bublebubleGame.BubbleGame;
 import bublebubleGame.component.Bubble;
@@ -29,6 +31,7 @@ public class BackgroundPlayerService implements Runnable {
 	static int nextLevel;
 
 	public BackgroundPlayerService(BubbleGame mContext, Player player) {
+		this.mContext = mContext;
 		this.player = player;
 		this.bubbleList = mContext.getBubbleList();
 		this.setmContext(mContext);
@@ -50,6 +53,7 @@ public class BackgroundPlayerService implements Runnable {
 							if (Math.abs(player.getX() - bubbleList.get(i).getX()) < 10
 									&& Math.abs(player.getY() - bubbleList.get(i).getY()) < 50) {
 								Bubble bubble = bubbleList.get(i);
+								bubble.bubbledCount();
 								bubble.bubbledClear();		
 							}
 						}
@@ -103,6 +107,11 @@ public class BackgroundPlayerService implements Runnable {
 
 	public void setmContext(BubbleGame mContext) {
 		this.mContext = mContext;
+	}
+
+	public BufferedImage getImage() {
+		// TODO Auto-generated method stub
+		return image;
 	}
 
 }
