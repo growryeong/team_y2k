@@ -41,6 +41,7 @@ public class BackgroundPlayerService3 implements Runnable {
 
 	@Override
 	public void run() {
+		System.out.println("맵3");
 		while (true) {
 			try {
 
@@ -50,6 +51,7 @@ public class BackgroundPlayerService3 implements Runnable {
 							if (Math.abs(player.getX() - bubbleList.get(i).getX()) < 10
 									&& Math.abs(player.getY() - bubbleList.get(i).getY()) < 50) {
 								Bubble bubble = bubbleList.get(i);
+								bubble.bubbledCount();
 								bubble.bubbledClear();		
 							}
 						}

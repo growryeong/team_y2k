@@ -56,27 +56,34 @@ public class Gameover extends Thread {
 	      JOptionPane.showMessageDialog(null, message, "Game Over", JOptionPane.INFORMATION_MESSAGE);
 	   }
 	
-	@Override
-    public void run() {
-        while(true){
-            try{
-                Thread.sleep(200);
-                //whileGameover();
-                boolean check=Bubble.getCheck();
-			    
-			    if(check) {
-			    	levelManager.updateScore(1);
-			        endGame();
-			        break;
-			    }
-            } catch (InterruptedException ie){
-                ifInterrupted();
-                ie.getMessage();
-                break;
-            }
-        }
-        ifGameoverGone();
-    }
+//	@Override
+//    public void run() {
+//		boolean check=Bubble.getCheck();
+//		System.out.println("getCheck() check2:"+check);
+//		if(check  == false) {
+//	        while(true){
+//	            try{
+//	                Thread.sleep(200); 
+////	                check=Bubble.getCheck();
+//	                boolean check=Bubble.getCheck();
+//				    System.out.println("getCheck() check1:"+check);
+//				    if(check) {
+//				    	levelManager.updateScore(1);
+//				    	System.out.println("endGame 호출");
+//				        endGame();
+//				        check  = Bubble.setCheck();
+//				        System.out.println("getCheck() check:"+check);
+//				        break;
+//				    }
+//	            } catch (InterruptedException ie){
+//	                ifInterrupted();
+//	                ie.getMessage();
+//	                break;
+//	            }
+//	        }
+//	        ifGameoverGone();
+////		}     
+//    }
 }
 
 

@@ -16,7 +16,7 @@ import bublebubleGame.BubbleGame;
 public class LevelManager {
 
 	private int currentLevel; // 현재 레벨
-	private int currentScore; // 현재 점수
+	private int currentScore = 0; // 현재 점수
 	private int enemiesDefeated; // 적을 처치한 횟수
 	
 	private BubbleGame mContext;
@@ -24,9 +24,9 @@ public class LevelManager {
     private List<Bubble> bubbleList;
     
 	public LevelManager(BubbleGame mContext) {
+//		System.out.println("레벨 매니저 생성");
 		this.mContext = mContext;
 		this.currentLevel = 1; // 시작 레벨 초기화 1
-		this.currentScore = 0; // 시작 점수 초기화 0
 		this.enemiesDefeated = 0; // 처치한 적 초기화
 		this.bubbleList = new ArrayList<>(); // 목록 초기화
 	}
@@ -62,6 +62,7 @@ public class LevelManager {
 	// 점수 업데이트 메서드 (점수 채점 조건 충족되면 이 메서드 호출)
 	public void updateScore(int points) {
 		currentScore += points;
+		System.out.println("currentScore: "+ currentScore);
 		
 		//updateScoreLabel(); // 점수 라벨 업데이트
 		
@@ -69,9 +70,6 @@ public class LevelManager {
 		if(points > 0) {
 			//updateBackgroundMap();
 		}
-		
-		
-		
 	}
 	
 	// 점수가 증가하면 배경 맵 변경
@@ -83,6 +81,7 @@ public class LevelManager {
 
 	// 현재 점수 불러오는 메소드
 	public int getCurrentScore() {
+//		System.out.println("겟현재점수 호출");
 		return currentScore;
 	}
 	

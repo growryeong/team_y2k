@@ -41,6 +41,7 @@ public class BackgroundPlayerService2 implements Runnable {
 
 	@Override
 	public void run() {
+		System.out.println("맵2");
 		while (true) {
 			try {
 

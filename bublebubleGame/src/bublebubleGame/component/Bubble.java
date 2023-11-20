@@ -32,6 +32,8 @@ public class Bubble extends JLabel {
    private boolean left;
    private boolean right;
    
+   // 아래키이벤트에서 조건을 충족하기 위한 변수
+   static int enemykill=0;
    private int state; // 0(물방울),1(적을 가둔 물방울)
 
    private ImageIcon bubble;
@@ -45,6 +47,7 @@ public class Bubble extends JLabel {
    static int character;
 
    public Bubble(BubbleGame mContext, Player player) {
+	  System.out.println("버블 생성");
       this.mContext = mContext;
       this.player = player;
       this.enemy = mContext.getEnemy();
@@ -207,6 +210,11 @@ public class Bubble extends JLabel {
 		return check;
 	}
    
+   public static boolean setCheck() {
+	   check = false;
+	   return check;
+	}
+   
    private List<Bubble> bubbleList;
    
    public void bubbleClear() {
@@ -233,10 +241,16 @@ public class Bubble extends JLabel {
    // 맵, 서비스맵 변경과 아래키이벤트 조건을 충족하기 위한 변수
    static int nextLevel;
    
-   // 아래키이벤트에서 조건을 충족하기 위한 변수
-   static int enemykill=0;  
+    
    public static int getEnemykill() {
-		return enemykill;
+	   System.out.println("getEnemykill() " +enemykill);
+	   return enemykill;
+	}
+   
+   public static int setEnemykill() {
+	   enemykill  = 0;
+	   System.out.println("setEnemykill() " +enemykill);
+	   return enemykill;
 	}
    
    public void bubbledClear() {
@@ -256,7 +270,7 @@ public class Bubble extends JLabel {
 	   if(!check) {
 		   enemykill++;
 		   check=true;
-		   System.out.println(enemykill);
+		   System.out.println("적을 죽임: " + enemykill);
 	   }
    }
    
@@ -272,6 +286,8 @@ public class Bubble extends JLabel {
       System.out.println("getenemyCount " +enemyCount);
       return enemyCount;
    }
+   
+   
    
    public boolean isLeft() {
       return left;

@@ -15,6 +15,7 @@ import javax.swing.WindowConstants;
 
 import bublebubleGame.BubbleGame;
 import bublebubleGame.component.Player;
+import bublebubleGame.music.clickBGM;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -112,6 +113,7 @@ public class ChoiceFrame extends JFrame {
     	oneBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+            	new clickBGM();
                 character=1;
                 new BubbleGame();
                 setVisible(false); // 창 안보이게 하기 
@@ -122,6 +124,7 @@ public class ChoiceFrame extends JFrame {
     	twoBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+            	new clickBGM();
             	character=2;
                 new BubbleGame();
                 setVisible(false); // 창 안보이게 하기 
@@ -132,6 +135,7 @@ public class ChoiceFrame extends JFrame {
     	threeBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+            	new clickBGM();
             	character=3;
                 new BubbleGame();
                 setVisible(false); // 창 안보이게 하기 

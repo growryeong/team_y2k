@@ -1,5 +1,6 @@
 package bublebubleGame;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -28,6 +29,9 @@ import bublebubleGame.component.Enemy;
 import bublebubleGame.component.Player;
 import bublebubleGame.level.LevelManager;
 import bublebubleGame.music.BGM;
+import bublebubleGame.music.NextMapBGM;
+import bublebubleGame.music.clickBGM;
+import bublebubleGame.music.spaceBGM;
 import bublebubleGame.service.BackgroundPlayerService;
 import lombok.Getter;
 import lombok.Setter;
@@ -121,7 +125,7 @@ public class BubbleGame extends JFrame implements ComponentListener, Runnable {
       bufferGraphics.clearRect(0, 0, dim.width, dim.height);
       // 배경이미지 그리기
       BufferedImage bufmap = componenttoImage(frontMap);
-      bufferGraphics.drawImage(bufmap, 7, 31, null);
+      bufferGraphics.drawImage(bufmap, 7, 30, null);
             
       // 캐릭터 그리기
       BufferedImage bufC = componenttoImage(player);
@@ -150,12 +154,15 @@ public class BubbleGame extends JFrame implements ComponentListener, Runnable {
 
       // nextLevel값에 따라 backgorundMap(1~3)변경
       if(nextLevel==1) {
+    	  Bubble.setEnemykill();
     	  frontMap = new JLabel(new ImageIcon("image/backgroundMap.png"));
       }
       if(nextLevel==2) {
+    	  Bubble.setEnemykill();
     	  frontMap = new JLabel(new ImageIcon("image/backgroundMap2.png"));
       }
       if(nextLevel==3) {
+    	  Bubble.setEnemykill();
     	  frontMap = new JLabel(new ImageIcon("image/backgroundMap3.png"));
       }
    }
@@ -223,6 +230,7 @@ public class BubbleGame extends JFrame implements ComponentListener, Runnable {
                Bubble bubble = new Bubble(mContext, player);
                bubbleList.add(bubble);
         	   add(bubble);
+        	   new spaceBGM();
         	   /*
         	   // 레벨에 따라 맵에 버블을 날리수 있는 개수가 다르게 설정
         	   // 스페이스바를 연타하게 되면 오류가 좀 있음
@@ -252,20 +260,39 @@ public class BubbleGame extends JFrame implements ComponentListener, Runnable {
             	// 플레이어의 위치가 검정색 위에 있고 적을 죽이면 오르는 nextLevel값이 조건을 충족하면 창을 다시 실행
             	// nextLevel의 값(0, 1, 2)에 따라 백그라운드 맵과 서비스맵이 변경 되도록 설정함
             	if (centerColor.getRed() == 0 && centerColor.getBlue() == 0 && centerColor.getGreen() == 0 
-            			&& nextLevel==1 && enemykill == 1) {
+            			&& nextLevel==1 && (1 <= enemykill)) {
             		nextLevel++;
 					setVisible(false);
-					check=false;;
+					check=false;
 					new BubbleGame();
 				}else if(centerColor.getRed() == 0 && centerColor.getBlue() == 0 && centerColor.getGreen() == 0 
-            			&& nextLevel==2 && enemykill == 3) {
+            			&& nextLevel==2 && (2 <= enemykill)) {
 					nextLevel++;
 					setVisible(false);
-					check=false;;
+					check=false;
 					new BubbleGame();
 				}else if(centerColor.getRed() == 0 && centerColor.getBlue() == 0 && centerColor.getGreen() == 0 
-            			&& nextLevel==3 && enemykill == 6) {
-					
+            			&& nextLevel==3&& (3 <= enemykill)) {
+					// ShowGameOver 객체 생성
+            		ShowGameOver showgameover = new ShowGameOver(mContext);
+
+            		// 프레임에 BorderLayout 설정
+            		setLayout(new BorderLayout());
+
+            		// ShowGameOver 컴포넌트를 프레임의 중앙에 배치
+            		add(showgameover, BorderLayout.CENTER);
+
+            		// 컴포넌트가 화면에 나타나도록 설정
+            		showgameover.setVisible(true);
+
+            		// 레이아웃 재구성
+            		revalidate();
+
+            		// 화면 다시 그리기
+            		repaint();
+
+            		System.out.println("게임오버 화면 호출");
+				    endGame();
 				}
             	break;
             }
@@ -322,6 +349,10 @@ public class BubbleGame extends JFrame implements ComponentListener, Runnable {
       int fiinalScore = levelManager.getCurrentScore();
       String message = "Game Over!\nFinal Score: "+fiinalScore;
       JOptionPane.showMessageDialog(this, message, "Game Over", JOptionPane.INFORMATION_MESSAGE);
+      // 프레임 종료
+      dispose();
+      // 프로세스 종료
+      System.exit(0);
    }
    
 //   종료 함수
@@ -335,32 +366,31 @@ public class BubbleGame extends JFrame implements ComponentListener, Runnable {
 
 
    // 레벨 업 조건 충족 여부 확인하는 코드
-   public boolean shouldLevelUP() {
-      // levelManager가 null인지 확인
-      if (levelManager != null) {
-         // 레벨 조건
-         int scoreThreshold = 1000;
-         int enemiesThreshold = 10;
-
-         // 현재 점수와 죽인 적 확인
-         int currentScore = levelManager.getCurrentScore();
-         int enemiesDefeated = levelManager.getEnemiesDefeated();
-
-         // 플레이어 레벨 업 조건 확인
-         if (currentScore >= scoreThreshold && enemiesDefeated >= enemiesThreshold) {
-                levelManager.increaseLevel(player); // 레벨 상승
-                levelManager.updateScore(-scoreThreshold); // 점수 차감
-                return true;
-            }
-      }
-      return false;
-   }
+//   public boolean shouldLevelUP() {
+//      // levelManager가 null인지 확인
+//      if (levelManager != null) {
+//         // 레벨 조건
+//         int scoreThreshold = 1000;
+//         int enemiesThreshold = 10;
+//
+//         // 현재 점수와 죽인 적 확인
+//         int currentScore = levelManager.getCurrentScore();
+//         int enemiesDefeated = levelManager.getEnemiesDefeated();
+//
+//         // 플레이어 레벨 업 조건 확인
+//         if (currentScore >= scoreThreshold && enemiesDefeated >= enemiesThreshold) {
+//                levelManager.increaseLevel(player); // 레벨 상승
+//                levelManager.updateScore(-scoreThreshold); // 점수 차감
+//                return true;
+//            }
+//      }
+//      return false;
+//   }
    
    @Override
    public void run() {
 	   while(true) {
 		   try {
-
 				new Thread(() -> {
 
 					
@@ -375,27 +405,27 @@ public class BubbleGame extends JFrame implements ComponentListener, Runnable {
 		  
    
    // 플레이어가 적을 죽였는지 확인하는 코드 구현
-   private void playerKilledEnemies() {
-    System.out.println("playerKilledEnemies 호출");
-    
-    if(cnt == 1) {
-       stop();
-         endGame();
-
-    }else if(cnt == 3) {
-       stop();
-         endGame();
-
-    }else if(cnt == 6) {
-       stop();
-         endGame();
-    }
-   }
+//   private void playerKilledEnemies() {
+//    System.out.println("playerKilledEnemies 호출");
+//    
+//    if(cnt == 1) {
+////       stop();
+////       endGame();
+//
+//    }else if(cnt == 3) {
+////       stop();
+////       endGame();
+//
+//    }else if(cnt == 6) {
+////       stop();
+////       endGame();
+//    }
+//   }
    
    static boolean check;
    
    public static void main(String[] args) {
-	  
+//	  System.out.println("Gameover 생성");
 	  Gameover over = new Gameover();
 	  over.start();
 	  new BGM();
@@ -407,10 +437,10 @@ public class BubbleGame extends JFrame implements ComponentListener, Runnable {
    // 게임 진행 로직의 일부로 게임 루프 중 또는 게임에서 특정 이벤트가 발생할 때 호출
    // 게임 루프의 각 반복마다 shouldLevelUP을 검사하여 플레이어가 다음 레벨로 진행해야 하는지 여부 결정
    // 적을 죽였을때도 똑같이 playerKilledEnemies가 호출
-   private void gameLoop() {
-      shouldLevelUP(); // 레벨 업 조건 확인
-      playerKilledEnemies(); // 죽인 적 
-   }
+//   private void gameLoop() {
+//      shouldLevelUP(); // 레벨 업 조건 확인
+//      playerKilledEnemies(); // 죽인 적 
+//   }
    
    public BubbleGame getmContext() {
       return mContext;

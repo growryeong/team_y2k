@@ -12,6 +12,7 @@ import javax.swing.JLabel;
 
 import bublebubleGame.BubbleGame;
 import bublebubleGame.component.Player;
+import bublebubleGame.music.clickBGM;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -48,6 +49,7 @@ public class ChoiceStart extends JFrame implements ActionListener{
     public void actionPerformed(ActionEvent e) {
       if(startBtn == e.getSource()) {
          start();
+         new clickBGM();
          setVisible(false);
       }
    }

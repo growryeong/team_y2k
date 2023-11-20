@@ -44,6 +44,7 @@ public class BackgroundPlayerService implements Runnable {
 
 	@Override
 	public void run() {
+		System.out.println("맵1");
 		while (true) {
 			try {
 
